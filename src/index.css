@@ -1,0 +1,395 @@
+@import "tailwindcss";
+
+/* ==========================================================================
+   LPB WEB STUDIO - WARM PEARL & LIGHT GLASSMORPHISM SYSTEM (TAILWIND V4)
+   ========================================================================== */
+
+@theme {
+  --color-bg-base: #edf1f5;
+  --color-bg-surface: #f6f8fb;
+  --color-bg-subtle: #e2e8f0;
+
+  --color-text-main: #0f172a;
+  --color-text-muted: #475569;
+  --color-text-subtle: #64748b;
+
+  --color-gold-primary: #b48c1e;
+  --color-gold-light: #d4af37;
+  --color-gold-accent: #f59e0b;
+
+  --color-sapphire: #2563eb;
+  --color-emerald: #059669;
+
+  --font-display: 'Cinzel', Georgia, serif;
+  --font-body: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'JetBrains Mono', Menlo, Monaco, Consolas, monospace;
+}
+
+:root {
+  /* Warm Pearl & Matte Glass Variables - Zero Glare & Soft */
+  --bg-base: #edf1f5;
+  --bg-surface: #f6f8fb;
+  --bg-glass: rgba(246, 248, 251, 0.82);
+  --bg-glass-card: rgba(255, 255, 255, 0.65);
+
+  --text-main: #0f172a;
+  --text-muted: #475569;
+  --text-subtle: #64748b;
+
+  --gold-primary: #b48c1e;
+  --gold-light: #d4af37;
+  --gold-bright: #eab308;
+  --gold-glow: rgba(212, 175, 55, 0.25);
+
+  --border-subtle: rgba(203, 213, 225, 0.8);
+  --border-glass: rgba(255, 255, 255, 0.7);
+  --border-gold: rgba(212, 175, 55, 0.35);
+
+  --shadow-soft: 0 10px 30px -10px rgba(15, 23, 42, 0.05);
+  --shadow-glass: 0 20px 40px -15px rgba(15, 23, 42, 0.07), 0 0 20px rgba(212, 175, 55, 0.04);
+
+  --font-display: 'Cinzel', Georgia, serif;
+  --font-body: 'Plus Jakarta Sans', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+
+/* Global Reset & Base */
+html {
+  scroll-behavior: smooth;
+  color-scheme: light;
+}
+
+body {
+  background-color: #edf1f5;
+  color: #0f172a;
+  font-family: var(--font-body);
+  line-height: 1.6;
+  overflow-x: hidden;
+  position: relative;
+  background-image: 
+    radial-gradient(circle at 50% 0%, rgba(212, 175, 55, 0.07) 0%, transparent 45%),
+    radial-gradient(circle at 10% 25%, rgba(59, 130, 246, 0.04) 0%, transparent 35%),
+    radial-gradient(circle at 90% 65%, rgba(212, 175, 55, 0.05) 0%, transparent 40%),
+    radial-gradient(circle at 50% 100%, rgba(226, 232, 240, 0.8) 0%, transparent 50%);
+  background-attachment: fixed;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #e2e8f0;
+}
+::-webkit-scrollbar-thumb {
+  background: #94a3b8;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #64748b;
+}
+
+/* Selection */
+::selection {
+  background: #fde68a;
+  color: #0f172a;
+}
+
+/* Typography Helpers */
+h1, h2, h3, h4, .font-display {
+  font-family: var(--font-display);
+  letter-spacing: 0.03em;
+  text-rendering: optimizeLegibility;
+}
+
+.text-gold-gradient {
+  background: linear-gradient(135deg, #0f172a 0%, #854d0e 40%, #b45309 80%, #d97706 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: inline-block;
+}
+
+.text-silver-gradient {
+  background: linear-gradient(135deg, #1e293b 0%, #475569 50%, #64748b 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: inline-block;
+}
+
+/* Layout Utilities */
+.container-lpb {
+  width: 100%;
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+.section-padding {
+  padding: 6rem 0;
+}
+
+@media (max-width: 768px) {
+  .section-padding {
+    padding: 4rem 0;
+  }
+}
+
+/* Soothing Warm Pearl Glass Cards */
+.glass-panel {
+  background: rgba(246, 248, 251, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  border-radius: 20px;
+  box-shadow: 0 20px 40px -15px rgba(15, 23, 42, 0.05), 0 0 0 1px rgba(203, 213, 225, 0.5);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.glass-panel:hover {
+  border-color: rgba(212, 175, 55, 0.4);
+  box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.09), 0 0 20px rgba(212, 175, 55, 0.1);
+}
+
+.glass-card-interactive {
+  position: relative;
+  background: rgba(250, 251, 253, 0.82);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.75);
+  border-radius: 24px;
+  padding: 2.2rem;
+  overflow: hidden;
+  box-shadow: 0 15px 35px -10px rgba(15, 23, 42, 0.04), 0 0 0 1px rgba(203, 213, 225, 0.6);
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.glass-card-interactive::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, #d4af37, transparent);
+  opacity: 0.3;
+  transition: all 0.3s ease;
+}
+
+.glass-card-interactive:hover {
+  transform: translateY(-6px);
+  background: rgba(255, 255, 255, 0.94);
+  border-color: rgba(212, 175, 55, 0.45);
+  box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.1), 0 0 25px rgba(212, 175, 55, 0.12);
+}
+
+.glass-card-interactive:hover::before {
+  opacity: 1;
+}
+
+/* Premium Buttons */
+.btn-gold {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 0.95rem;
+  letter-spacing: 0.03em;
+  padding: 0.85rem 1.8rem;
+  border-radius: 9999px;
+  border: 1px solid rgba(212, 175, 55, 0.4);
+  text-decoration: none;
+  cursor: pointer;
+  box-shadow: 0 8px 25px -6px rgba(15, 23, 42, 0.2), 0 0 15px rgba(212, 175, 55, 0.15);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.btn-gold:hover {
+  transform: translateY(-2px);
+  background: linear-gradient(135deg, #d97706 0%, #b45309 100%);
+  border-color: #fde68a;
+  box-shadow: 0 12px 30px -8px rgba(180, 83, 9, 0.35), 0 0 20px rgba(212, 175, 55, 0.3);
+  color: #ffffff;
+}
+
+.btn-outline {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  background: rgba(241, 245, 249, 0.8);
+  backdrop-filter: blur(12px);
+  color: #1e293b;
+  font-weight: 600;
+  font-size: 0.95rem;
+  padding: 0.85rem 1.8rem;
+  border-radius: 9999px;
+  border: 1px solid #cbd5e1;
+  text-decoration: none;
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(15, 23, 42, 0.03);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.btn-outline:hover {
+  background: #ffffff;
+  border-color: #d4af37;
+  color: #854d0e;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.06);
+}
+
+/* Social Media Pill Buttons */
+.social-pill-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1.1rem;
+  border-radius: 9999px;
+  background: rgba(241, 245, 249, 0.85);
+  border: 1px solid rgba(203, 213, 225, 0.8);
+  color: #334155;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-decoration: none;
+  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.03);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.social-pill-btn:hover {
+  transform: translateY(-2px);
+  background: #ffffff;
+}
+
+.social-pill-btn.social-fb:hover {
+  border-color: #1877f2;
+  box-shadow: 0 4px 15px rgba(24, 119, 242, 0.2);
+  color: #1877f2;
+}
+
+.social-pill-btn.social-ig:hover {
+  border-color: #e1306c;
+  box-shadow: 0 4px 15px rgba(225, 48, 108, 0.2);
+  color: #e1306c;
+}
+
+.social-pill-btn.social-tiktok:hover {
+  border-color: #0f172a;
+  box-shadow: 0 4px 15px rgba(15, 23, 42, 0.15);
+  color: #0f172a;
+}
+
+.social-pill-btn.social-wa:hover {
+  border-color: #25d366;
+  box-shadow: 0 4px 15px rgba(37, 211, 102, 0.2);
+  color: #16a34a;
+}
+
+/* ==========================================================================
+   DYNAMIC SCROLL REVEAL ANIMATIONS (60 FPS HARDWARE ACCELERATED)
+   ========================================================================== */
+.reveal-on-scroll {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+
+.reveal-on-scroll.revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.reveal-scale {
+  opacity: 0;
+  transform: scale(0.92) translateY(30px);
+  transition: opacity 0.85s cubic-bezier(0.16, 1, 0.3, 1), transform 0.85s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+
+.reveal-scale.revealed {
+  opacity: 1;
+  transform: scale(1) translateY(0);
+}
+
+.reveal-slide-left {
+  opacity: 0;
+  transform: translateX(-40px);
+  transition: opacity 0.85s cubic-bezier(0.16, 1, 0.3, 1), transform 0.85s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+
+.reveal-slide-left.revealed {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.reveal-slide-right {
+  opacity: 0;
+  transform: translateX(40px);
+  transition: opacity 0.85s cubic-bezier(0.16, 1, 0.3, 1), transform 0.85s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+
+.reveal-slide-right.revealed {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* Stagger Delays for Cards */
+.reveal-stagger-1 { transition-delay: 0.08s; }
+.reveal-stagger-2 { transition-delay: 0.18s; }
+.reveal-stagger-3 { transition-delay: 0.28s; }
+.reveal-stagger-4 { transition-delay: 0.38s; }
+
+@keyframes floatCrest {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-8px) rotate(0.5deg); }
+}
+
+.float-animation {
+  animation: floatCrest 6s ease-in-out infinite;
+}
+
+/* Section Header Typography */
+.section-header {
+  text-align: center;
+  max-width: 780px;
+  margin: 0 auto 3.5rem auto;
+}
+
+.section-header .subtitle {
+  color: #b45309;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-bottom: 0.8rem;
+}
+
+.section-header .title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin-bottom: 1rem;
+  line-height: 1.2;
+}
+
+.section-header .description {
+  color: #475569;
+  font-size: 1.05rem;
+  line-height: 1.6;
+}
+
+@media (max-width: 768px) {
+  .section-header .title {
+    font-size: 2rem;
+  }
+  .section-header .description {
+    font-size: 0.95rem;
+  }
+}

@@ -56,10 +56,10 @@ export const ProjectVault = () => {
             gap: '1.5rem'
           }}
         >
-          {filteredProjects.map((project: ProjectItem, index: number) => (
+          {filteredProjects.map((project: ProjectItem) => (
             <div
               key={project.id}
-              className={`glass-card-interactive p-4 sm:p-5 flex flex-col justify-between reveal-on-scroll reveal-stagger-${(index % 4) + 1} group`}
+              className="glass-card-interactive p-4 sm:p-5 flex flex-col justify-between project-card-enter group"
             >
               <div>
                 {/* Thumbnail Preview */}

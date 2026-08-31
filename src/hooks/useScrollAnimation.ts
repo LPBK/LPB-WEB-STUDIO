@@ -12,29 +12,43 @@ export const useScrollAnimation = () => {
     };
 
     const observerOptions: IntersectionObserverInit = {
-      threshold: 0.15,
-      rootMargin: '0px 0px -40px 0px'
+      threshold: 0.1,
+      rootMargin: '0px 0px -20px 0px'
     };
 
     const observer = new IntersectionObserver(observerCallback, observerOptions);
-    const elements = document.querySelectorAll(
-      '.reveal-on-scroll, .reveal-scale, .reveal-slide-left, .reveal-slide-right'
-    );
 
-    elements.forEach((el) => {
-      // If already in initial viewport, reveal immediately with slight delay
-      const rect = el.getBoundingClientRect();
-      if (rect.top < window.innerHeight && rect.bottom > 0) {
-        setTimeout(() => {
+    const observeElements = (container: Document | HTMLElement = document) => {
+      const elements = container.querySelectorAll(
+        '.reveal-on-scroll:not(.revealed), .reveal-scale:not(.revealed), .reveal-slide-left:not(.revealed), .reveal-slide-right:not(.revealed)'
+      );
+
+      elements.forEach((el) => {
+        const rect = el.getBoundingClientRect();
+        if (rect.top < window.innerHeight && rect.bottom > 0) {
           el.classList.add('revealed');
-        }, 100);
-      } else {
-        observer.observe(el);
-      }
+        } else {
+          observer.observe(el);
+        }
+      });
+    };
+
+    observeElements();
+
+    // Watch for dynamically added DOM elements
+    const mutationObserver = new MutationObserver(() => {
+      observeElements();
+    });
+
+    mutationObserver.observe(document.body, {
+      childList: true,
+      subtree: true
     });
 
     return () => {
-      elements.forEach((el) => observer.unobserve(el));
+      observer.disconnect();
+      mutationObserver.disconnect();
     };
   }, []);
 };
+

@@ -37,11 +37,10 @@ export const ProjectVault = () => {
             <button
               key={f.id}
               onClick={() => setActiveFilter(f.id as any)}
-              className={`px-4 py-1.5 rounded-full text-xs font-semibold cursor-pointer transition-all duration-200 ${
-                activeFilter === f.id
-                  ? 'bg-slate-900 text-white shadow-sm'
-                  : 'bg-white/80 text-slate-700 border border-slate-200 hover:bg-slate-100'
-              }`}
+              className={`px-4 py-1.5 rounded-full text-xs font-semibold cursor-pointer transition-all duration-200 ${activeFilter === f.id
+                ? 'bg-slate-900 text-white shadow-sm'
+                : 'bg-white/80 text-slate-700 border border-slate-200 hover:bg-slate-100'
+                }`}
             >
               {f.label}
             </button>
@@ -63,13 +62,13 @@ export const ProjectVault = () => {
             >
               <div>
                 {/* Thumbnail Preview */}
-                <div className="relative w-full h-44 rounded-xl overflow-hidden mb-4 bg-slate-100 border border-slate-200/80">
+                <div className="relative w-full h-30 rounded-xl overflow-hidden mb-4 bg-slate-100 border border-slate-200/80">
                   <img
                     src={project.imageUrl}
                     alt={project.title}
                     loading="lazy"
                     decoding="async"
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    className="w-full h-full object-fit transition-transform duration-500 group-hover:scale-105"
                   />
                   <div className="absolute top-3 left-3 bg-slate-900/80 backdrop-blur-md text-[11px] font-bold text-amber-400 px-2.5 py-1 rounded-md border border-slate-700/60 shadow-sm">
                     {project.categoryLabel}
@@ -82,7 +81,7 @@ export const ProjectVault = () => {
                 </h3>
 
                 {/* Short Description */}
-                <p className="text-slate-600 text-xs leading-relaxed mb-4 line-clamp-2">
+                <p className="text-slate-600 text-xs leading-relaxed mb-4 line-clamp-4">
                   {project.description}
                 </p>
               </div>
@@ -104,6 +103,8 @@ export const ProjectVault = () => {
                 <a
                   href={project.projectUrl || '#contacto'}
                   className="w-full flex items-center justify-center gap-1.5 py-2 px-3 rounded-lg bg-slate-900 hover:bg-amber-600 text-white font-medium text-xs transition-colors duration-200 shadow-xs cursor-pointer no-underline"
+                  target="_blank"
+                  rel="noopener noreferrer"
                 >
                   <span>Ver Detalles</span>
                   <ExternalLink size={13} />

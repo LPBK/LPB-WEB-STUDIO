@@ -5,6 +5,7 @@ export const TERMINAL_COMMANDS: Record<string, string[]> = {
     '  lpb services    -> Listar catálogo de soluciones y PWAs',
     '  lpb status      -> Consultar disponibilidad para proyectos',
     '  lpb social      -> Enlaces a Facebook, TikTok, Instagram y WhatsApp',
+    '  lpb contact     -> Ver línea de teléfono, WhatsApp y dominio oficial',
     '  lpb quote       -> Abrir el cotizador interactivo de proyectos',
     '  clear           -> Limpiar la pantalla de la terminal'
   ],
@@ -13,7 +14,7 @@ export const TERMINAL_COMMANDS: Record<string, string[]> = {
     '  • Lenguaje Core: TypeScript (Strict Type Safety & Zero Any Policy)',
     '  • Frontend Engine: React / Tailwind / Vite (Ultra-fast HMR)',
     '  • Styling System: Vanilla CSS Modern Tokens & Hardware Accelerated Effects',
-    '  • Cloud & Persistence: PostgreSQL / Supabase / WebSockets/ Neonbase',
+    '  • Cloud & Persistence: PostgreSQL / Supabase / WebSockets / Neonbase',
     '  • Target Performance: 100/100 Google Lighthouse across all platforms'
   ],
   services: [
@@ -31,9 +32,17 @@ export const TERMINAL_COMMANDS: Record<string, string[]> = {
   ],
   social: [
     '🌐 REDES OFICIALES LPB WEB STUDIO:',
-    '  • Facebook:  https://www.facebook.com/people/LPB-WEB-Studio/61580211116641/',
-    '  • TikTok:    https://www.tiktok.com/@lpbwebstudio',
-    '  • Instagram: https://www.instagram.com/lpbwebstudio',
-    '  • WhatsApp:  Canal directo habilitado'
+    '  • Web Oficial: https://www.lpbwebstudio.dev/',
+    '  • WhatsApp:    +1 (829) 352-2441 (https://wa.me/18293522441)',
+    '  • Facebook:    https://www.facebook.com/profile.php?id=61593941761185',
+    '  • TikTok:      https://www.tiktok.com/@lpb.web.studio?lang=es-419',
+    '  • Instagram:   https://www.instagram.com/lpbwebstudio1/'
+  ],
+  contact: [
+    '📞 CANALES DE CONTACTO LPB WEB STUDIO:',
+    '  • Teléfono / WhatsApp: +1 (829) 352-2441',
+    '  • Enlace Directo WA:   https://wa.me/18293522441',
+    '  • Dominio Oficial:     https://www.lpbwebstudio.dev/',
+    '  • Correo Electrónico:  contacto@lpbwebstudio.dev'
   ]
 };

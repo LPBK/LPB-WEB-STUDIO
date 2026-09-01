@@ -3,12 +3,12 @@ import type { ProjectItem } from '../types';
 export const PROJECTS_DATA: ProjectItem[] = [
   {
     id: 'aegis-platform',
-    title: 'Aegis Core Enterprise',
+    title: 'INMOBILIARIA DEL ATLANTICO LAS TERRENAS',
     category: 'dashboard',
     categoryLabel: 'Dashboard & RBAC',
-    description: 'Panel de control con gestión granular de roles de usuario, analíticas en tiempo real y seguridad RLS.',
-    imageUrl: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=600&auto=format&fit=crop',
-    projectUrl: '#contacto',
+    description: 'Plataforma web inmobiliaria con panel administrativo para gestión de propiedades, roles de usuario y SEO optimizado.',
+    imageUrl: '/assets/inmo.png',
+    projectUrl: 'https://www.inmobiliariadelatlanticolasterrenas.com/',
     tags: ['React', 'TypeScript', 'Supabase', 'RBAC'],
     accentColor: '#d4af37'
   },

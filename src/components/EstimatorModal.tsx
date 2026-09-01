@@ -82,7 +82,7 @@ export const EstimatorModal = ({ isOpen, onClose, initialServiceId }: EstimatorM
       `Hola LPB WEB Studio, me gustaría agendar una reunión para formalizar este desarrollo.`;
 
     const encoded = encodeURIComponent(message);
-    window.open(`https://wa.me/?text=${encoded}`, '_blank');
+    window.open(`https://wa.me/18293522441?text=${encoded}`, '_blank');
   };
 
   return (

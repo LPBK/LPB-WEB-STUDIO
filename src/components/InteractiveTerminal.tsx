@@ -151,7 +151,7 @@ export const InteractiveTerminal = ({ onOpenEstimator }: InteractiveTerminalProp
                   <span className="text-blue-400 shrink-0">lpb@studio:~$</span>
                   <span className="font-semibold text-white break-all">{log.command}</span>
                 </div>
-                <div className="mt-1 text-slate-300 pl-3 sm:pl-4 border-l-2 border-amber-500/30 text-xs sm:text-sm space-y-0.5 break-words">
+                <div className="mt-1 text-slate-300 pl-3 sm:pl-4 border-l-2 border-amber-500/30 text-xs sm:text-sm space-y-0.5 wrap-break-word">
                   {log.response.map((line, idx) => (
                     <div key={idx} className={line.startsWith('⚙️') || line.startsWith('🛡️') || line.startsWith('🟢') ? 'text-amber-400 font-medium' : 'text-slate-300'}>
                       {line}

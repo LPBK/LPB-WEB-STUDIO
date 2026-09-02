@@ -1,9 +1,8 @@
 import { useState } from 'react';
 import type { FormEvent } from 'react';
-import { Send, CheckCircle2, Shield, MapPin, Phone, MessageSquare } from 'lucide-react';
+import { Send, CheckCircle2, Shield, MapPin, } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { SocialButtons } from './SocialButtons';
-import { COMPANY_INFO } from '../data/socialData';
 
 export const ContactSection = () => {
   const [formData, setFormData] = useState({
@@ -76,36 +75,6 @@ export const ContactSection = () => {
                 <div className="text-xs text-amber-700 font-bold tracking-wider uppercase">Sello Britania Oficial</div>
               </div>
             </div>
-
-            <p className="text-slate-600 text-sm leading-relaxed mb-6">
-              Estamos listos para transformar tu visión en una plataforma de software sólida, rápida y con estética de primer nivel.
-            </p>
-
-            {/* Direct Phone & WhatsApp Highlight Card */}
-            <div className="bg-gradient-to-br from-amber-50 to-amber-100/50 border border-amber-200/80 rounded-2xl p-5 mb-6 shadow-sm">
-              <div className="text-xs font-bold text-amber-900 mb-2 uppercase tracking-wider flex items-center gap-1.5">
-                <Phone size={15} className="text-amber-600" />
-                Línea Directa & WhatsApp Oficial:
-              </div>
-              <div className="flex items-center justify-between flex-wrap gap-2 pt-1">
-                <a
-                  href={`tel:+18293522441`}
-                  className="text-base sm:text-lg font-extrabold font-['JetBrains_Mono'] text-slate-900 hover:text-amber-700 transition-colors"
-                >
-                  {COMPANY_INFO.phone}
-                </a>
-                <a
-                  href={`https://wa.me/18293522441?text=Hola%20LPB%20WEB%20Studio,%20quiero%20conversar%20sobre%20un%20proyecto`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow-sm transition-all"
-                >
-                  <MessageSquare size={13} />
-                  <span>Chatear por WhatsApp</span>
-                </a>
-              </div>
-            </div>
-
             {/* Social Media Highlight Box */}
             <div className="bg-slate-200/60 border border-slate-300/70 rounded-2xl p-6 mb-8 shadow-sm">
               <div className="text-xs font-bold text-slate-900 mb-3 uppercase tracking-wider">

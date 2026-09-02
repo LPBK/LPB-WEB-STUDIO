@@ -5,15 +5,18 @@ import { Services } from './components/Services';
 import { InteractiveTerminal } from './components/InteractiveTerminal';
 import { ProjectVault } from './components/ProjectVault';
 import { Philosophy } from './components/Philosophy';
+import { CommentsSection } from './components/CommentsSection';
 import { ContactSection } from './components/ContactSection';
 import { Footer } from './components/Footer';
 import { useScrollAnimation } from './hooks/useScrollAnimation';
 
 // Lazy load only the heavy estimator modal on demand
 const EstimatorModal = lazy(() => import('./components/EstimatorModal'));
+const AdminModal = lazy(() => import('./components/AdminModal'));
 
 export function App() {
   const [isEstimatorOpen, setIsEstimatorOpen] = useState(false);
+  const [isAdminOpen, setIsAdminOpen] = useState(false);
   const [selectedServiceForQuote, setSelectedServiceForQuote] = useState<string | undefined>(undefined);
 
   // Initialize and run dynamic scroll animations
@@ -41,11 +44,12 @@ export function App() {
         <InteractiveTerminal onOpenEstimator={() => handleOpenEstimator()} />
         <ProjectVault />
         <Philosophy />
+        <CommentsSection />
         <ContactSection />
       </main>
 
-      {/* Footer */}
-      <Footer />
+      {/* Footer with Secret Admin Trigger */}
+      <Footer onOpenAdmin={() => setIsAdminOpen(true)} />
 
       {/* Interactive Estimator Modal - Lazy Loaded On Demand */}
       {isEstimatorOpen && (
@@ -54,6 +58,16 @@ export function App() {
             isOpen={isEstimatorOpen}
             onClose={handleCloseEstimator}
             initialServiceId={selectedServiceForQuote}
+          />
+        </Suspense>
+      )}
+
+      {/* Secret Admin & Neon Moderation Panel */}
+      {isAdminOpen && (
+        <Suspense fallback={null}>
+          <AdminModal
+            isOpen={isAdminOpen}
+            onClose={() => setIsAdminOpen(false)}
           />
         </Suspense>
       )}

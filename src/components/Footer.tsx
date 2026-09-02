@@ -1,8 +1,35 @@
+import { useRef } from 'react';
 import SocialButtons from './SocialButtons';
 import { Phone, Mail, Globe } from 'lucide-react';
 import { COMPANY_INFO } from '../data/socialData';
 
-export const Footer = () => {
+interface FooterProps {
+  onOpenAdmin?: () => void;
+}
+
+export const Footer = ({ onOpenAdmin }: FooterProps) => {
+  const clickCountRef = useRef(0);
+  const clickTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const handleLogoClick = () => {
+    clickCountRef.current += 1;
+
+    if (clickTimerRef.current) {
+      clearTimeout(clickTimerRef.current);
+    }
+
+    if (clickCountRef.current >= 3) {
+      clickCountRef.current = 0;
+      if (onOpenAdmin) {
+        onOpenAdmin();
+      }
+    } else {
+      clickTimerRef.current = setTimeout(() => {
+        clickCountRef.current = 0;
+      }, 1800);
+    }
+  };
+
   return (
     <footer className="relative bg-slate-900 text-slate-100 border-t border-slate-800 pt-16 pb-12 overflow-hidden">
       <div className="container-lpb">
@@ -10,7 +37,10 @@ export const Footer = () => {
         <div className="flex flex-col lg:flex-row justify-between items-start gap-10 mb-12">
           {/* Brand Column */}
           <div className="max-w-md">
-            <div className="flex items-center gap-3.5 mb-4">
+            <div
+              onClick={handleLogoClick}
+              className="flex items-center gap-3.5 mb-4 select-none w-fit cursor-default"
+            >
               <div className="w-11 h-11 rounded-full border-2 border-amber-500 overflow-hidden bg-transparent shadow-sm">
                 <img
                   src="/assets/LPBlogo.png"

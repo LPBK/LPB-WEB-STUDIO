@@ -20,6 +20,9 @@ export interface ProjectItem {
   projectUrl?: string;
   tags: string[];
   accentColor?: string;
+  isLive?: boolean;
+  statusText?: string;
+  highlights?: string[];
 }
 
 export interface EstimatorOption {
@@ -49,4 +52,29 @@ export interface SocialLink {
 export interface TerminalCommandResponse {
   output: string | string[];
   isError?: boolean;
+}
+
+export interface CommentItem {
+  id: string;
+  authorName: string;
+  authorLastNameInitial?: string;
+  role?: string;
+  avatarUrl?: string;
+  projectName: string;
+  projectType: string;
+  rating: number;
+  comment: string;
+  createdAt: string;
+  verified: boolean;
+}
+
+export interface CommentFormData {
+  authorName: string;
+  authorLastNameInitial: string;
+  role: string;
+  projectName: string;
+  projectType: string;
+  rating: number;
+  comment: string;
+  avatarUrl: string;
 }

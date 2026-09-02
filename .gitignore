@@ -1,12 +1,21 @@
+# Environment & Secrets (Cybersecurity Protection)
+.env
+.env.*
+*.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
 # Logs
 logs
 *.log
 npm-debug.log*
 yarn-debug.log*
-yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
+# Dependencies & Build Output
 node_modules
 dist
 dist-ssr
@@ -22,3 +31,8 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Agent files
+.agents/
+skills-lock.json
+

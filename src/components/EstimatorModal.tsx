@@ -1,5 +1,22 @@
 import { useState } from 'react';
-import { X, Sparkles, Check, Send, Smartphone, Globe, LayoutDashboard, Layers, Calculator, Clock, Server, Mail, Share2, Shield } from 'lucide-react';
+import {
+  X,
+  Sparkles,
+  Check,
+  Send,
+  Smartphone,
+  Globe,
+  LayoutDashboard,
+  Layers,
+  Calculator,
+  Server,
+  Mail,
+  Share2,
+  Shield,
+  Zap,
+  Database,
+  CreditCard
+} from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { PROJECT_TYPES, ADDON_MODULES, MAINTENANCE_PLAN } from '../data/estimatorData';
 
@@ -8,6 +25,8 @@ interface EstimatorModalProps {
   onClose: () => void;
   initialServiceId?: string;
 }
+
+const INCLUDED_IN_ADVANCED_MODULES = ['auth-rbac', 'realtime-sync', 'db-backup'];
 
 export const EstimatorModal = ({ isOpen, onClose, initialServiceId }: EstimatorModalProps) => {
   const defaultType = PROJECT_TYPES.find(p => p.id === initialServiceId) || PROJECT_TYPES[0];
@@ -19,8 +38,13 @@ export const EstimatorModal = ({ isOpen, onClose, initialServiceId }: EstimatorM
   if (!isOpen) return null;
 
   const currentType = PROJECT_TYPES.find(p => p.id === selectedType) || PROJECT_TYPES[0];
+  const isAdvancedPackage = selectedType === 'enterprise-dashboard' || selectedType === 'fullstack-platform';
 
   const toggleAddon = (id: string) => {
+    // If it's already bundled in the advanced package, it cannot be unselected or charged
+    if (isAdvancedPackage && INCLUDED_IN_ADVANCED_MODULES.includes(id)) {
+      return;
+    }
     if (selectedAddons.includes(id)) {
       setSelectedAddons(selectedAddons.filter(a => a !== id));
     } else {
@@ -28,12 +52,20 @@ export const EstimatorModal = ({ isOpen, onClose, initialServiceId }: EstimatorM
     }
   };
 
+  // Only bill addons that are NOT already included in the package
   const totalCost = currentType.basePrice + selectedAddons.reduce((acc, addonId) => {
+    if (isAdvancedPackage && INCLUDED_IN_ADVANCED_MODULES.includes(addonId)) {
+      return acc;
+    }
     const addon = ADDON_MODULES.find(a => a.id === addonId);
     return acc + (addon ? addon.price : 0);
   }, 0);
 
-  const estimatedDays = currentType.estimatedDays + selectedAddons.length * 2;
+  const additionalAddonsCount = selectedAddons.filter(
+    id => !(isAdvancedPackage && INCLUDED_IN_ADVANCED_MODULES.includes(id))
+  ).length;
+
+  const estimatedDays = currentType.estimatedDays + additionalAddonsCount * 2;
 
   const getIcon = (iconName: string) => {
     switch (iconName) {
@@ -50,6 +82,10 @@ export const EstimatorModal = ({ isOpen, onClose, initialServiceId }: EstimatorM
       case 'auth-rbac': return <Shield size={16} className="text-amber-600" />;
       case 'email-setup': return <Mail size={16} className="text-blue-600" />;
       case 'social-setup': return <Share2 size={16} className="text-pink-600" />;
+      case 'realtime-sync': return <Zap size={16} className="text-emerald-600" />;
+      case 'db-backup': return <Database size={16} className="text-indigo-600" />;
+      case 'payment-gateway': return <CreditCard size={16} className="text-emerald-600" />;
+      case 'seo-audit': return <Sparkles size={16} className="text-amber-500" />;
       default: return null;
     }
   };
@@ -61,24 +97,31 @@ export const EstimatorModal = ({ isOpen, onClose, initialServiceId }: EstimatorM
       origin: { y: 0.6 }
     });
 
-    const activeAddonsText = selectedAddons
-      .map(id => `• ${ADDON_MODULES.find(a => a.id === id)?.name} (+$${ADDON_MODULES.find(a => a.id === id)?.price} USD)`)
+    const includedModulesSection = isAdvancedPackage
+      ? `💼 *Módulos Ya Incluidos de Fábrica (Sin costo extra):*\n` +
+        INCLUDED_IN_ADVANCED_MODULES.map(id => `  • ✅ ${ADDON_MODULES.find(a => a.id === id)?.name} (Incluido)\n`).join('')
+      : '';
+
+    const optionalAddonsText = selectedAddons
+      .filter(id => !(isAdvancedPackage && INCLUDED_IN_ADVANCED_MODULES.includes(id)))
+      .map(id => `  • ➕ ${ADDON_MODULES.find(a => a.id === id)?.name} (+$${ADDON_MODULES.find(a => a.id === id)?.price} RD)`)
       .join('\n');
 
     const maintenanceText = includeMaintenance
-      ? `🔄 *Plan Recurrente:* $${MAINTENANCE_PLAN.monthlyPrice} USD/mes (${MAINTENANCE_PLAN.name})\n`
+      ? `🔄 *Plan Recurrente:* $${MAINTENANCE_PLAN.monthlyPrice} RD/mes (${MAINTENANCE_PLAN.name})\n`
       : `🔄 *Plan Recurrente:* No seleccionado\n`;
 
     const message = `👑 *SOLICITUD DE PROYECTO - LPB WEB STUDIO*\n` +
       `-----------------------------------------\n` +
       `👤 *Cliente / Empresa:* ${clientName || 'Nuevo Cliente'}\n` +
-      `🚀 *Plataforma Base:* ${currentType.name} ($${currentType.basePrice} USD)\n` +
-      `⏱️ *Plazo Estimado:* ~${estimatedDays} días hábiles\n\n` +
-      `📦 *Módulos Adicionales Seleccionados:*\n${activeAddonsText || '• Configuración Base'}\n\n` +
-      `🛠️ *Suscripción de Mantenimiento:*\n${maintenanceText}\n` +
+      `🚀 *Plataforma Base:* ${currentType.name} ($${currentType.basePrice} RD)\n` +
+      `⏱️ *Plazo Estimado:* ~${estimatedDays} días hábiles\n` +
+      includedModulesSection +
+      (optionalAddonsText ? `\n📦 *Módulos Adicionales Seleccionados:*\n${optionalAddonsText}\n` : '') +
+      `\n🛠️ *Suscripción de Mantenimiento:*\n${maintenanceText}\n` +
       `💎 *Inversión Total Estimada:*\n` +
-      `  • *Pago Inicial Desarrollo:* $${totalCost} USD\n` +
-      (includeMaintenance ? `  • *Mantenimiento & Hosting:* $${MAINTENANCE_PLAN.monthlyPrice} USD/mes\n\n` : `\n`) +
+      `  • *Pago Inicial Desarrollo:* $${totalCost} RD\n` +
+      (includeMaintenance ? `  • *Mantenimiento & Hosting:* $${MAINTENANCE_PLAN.monthlyPrice} RD/mes\n\n` : `\n`) +
       `Hola LPB WEB Studio, me gustaría agendar una reunión para formalizar este desarrollo.`;
 
     const encoded = encodeURIComponent(message);
@@ -129,17 +172,18 @@ export const EstimatorModal = ({ isOpen, onClose, initialServiceId }: EstimatorM
                 <div
                   key={type.id}
                   onClick={() => setSelectedType(type.id)}
-                  className={`p-4 sm:p-5 rounded-xl sm:rounded-2xl cursor-pointer transition-all duration-200 ${isSelected
-                    ? 'bg-amber-500/10 border-2 border-amber-600 shadow-[0_0_20px_rgba(245,158,11,0.15)]'
-                    : 'bg-white border border-slate-200 hover:border-slate-300 hover:bg-slate-50'
+                  className={`p-4 sm:p-5 rounded-xl sm:rounded-2xl cursor-pointer transition-all duration-200 border text-left ${isSelected
+                    ? 'bg-linear-to-br from-amber-500/15 to-amber-500/5 border-amber-500 shadow-md ring-1 ring-amber-500/30'
+                    : 'bg-slate-50 border-slate-200/80 hover:bg-slate-100/70 hover:border-slate-300'
                     }`}
                 >
-                  <div className="flex justify-between items-center gap-2 mb-2">
-                    <div className={isSelected ? 'text-amber-700' : 'text-slate-600'}>
+                  <div className="flex items-center justify-between gap-2 mb-2 sm:mb-3">
+                    <div className={`w-9 h-9 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center ${isSelected ? 'bg-amber-500 text-white' : 'bg-slate-200 text-slate-700'
+                      }`}>
                       {getIcon(type.icon)}
                     </div>
                     <span className="text-xs sm:text-sm font-bold text-amber-700 bg-amber-500/10 px-2.5 py-0.5 rounded-full whitespace-nowrap">
-                      Desde ${type.basePrice} USD
+                      Desde ${type.basePrice} RD
                     </span>
                   </div>
                   <div className="font-bold text-sm text-slate-900 mb-1">
@@ -156,37 +200,61 @@ export const EstimatorModal = ({ isOpen, onClose, initialServiceId }: EstimatorM
 
         {/* Step 2: Addon Modules Selection */}
         <div className="mb-6 sm:mb-8">
-          <div className="text-xs font-bold text-slate-900 mb-3 uppercase tracking-wider">
-            2. MÓDULOS ADICIONALES & ECOSISTEMA DIGITAL:
+          <div className="text-xs font-bold text-slate-900 mb-3 uppercase tracking-wider flex items-center justify-between">
+            <span>2. MÓDULOS ADICIONALES & ECOSISTEMA DIGITAL:</span>
+            {isAdvancedPackage && (
+              <span className="text-[11px] font-semibold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2.5 py-0.5 rounded-full">
+                ⭐ 3 Módulos Pro incluidos en este paquete
+              </span>
+            )}
           </div>
           <div className="flex flex-col gap-2.5">
             {ADDON_MODULES.map((addon) => {
-              const isChecked = selectedAddons.includes(addon.id);
+              const isIncludedInPackage = isAdvancedPackage && INCLUDED_IN_ADVANCED_MODULES.includes(addon.id);
+              const isChecked = isIncludedInPackage || selectedAddons.includes(addon.id);
+
               return (
                 <div
                   key={addon.id}
                   onClick={() => toggleAddon(addon.id)}
-                  className={`flex flex-col sm:flex-row sm:items-center justify-between p-3.5 sm:p-4 rounded-xl cursor-pointer transition-all duration-200 gap-2 sm:gap-4 ${isChecked
-                    ? 'bg-amber-500/10 border-2 border-amber-500/50 shadow-sm'
-                    : 'bg-slate-50 border border-slate-200/80 hover:bg-slate-100/70'
-                    }`}
+                  className={`flex flex-col sm:flex-row sm:items-center justify-between p-3.5 sm:p-4 rounded-xl transition-all duration-200 gap-2 sm:gap-4 ${
+                    isIncludedInPackage
+                      ? 'bg-emerald-50/50 border-2 border-emerald-400/80 shadow-xs cursor-default'
+                      : isChecked
+                      ? 'bg-amber-500/10 border-2 border-amber-500/50 shadow-sm cursor-pointer'
+                      : 'bg-slate-50 border border-slate-200/80 hover:bg-slate-100/70 cursor-pointer'
+                  }`}
                 >
                   <div className="flex items-start gap-3 flex-1 min-w-0">
                     <div
-                      className={`w-5 h-5 rounded-md flex items-center justify-center shrink-0 mt-0.5 ${isChecked ? 'bg-amber-600 text-white' : 'border-2 border-slate-400 bg-white'
-                        }`}
+                      className={`w-5 h-5 rounded-md flex items-center justify-center shrink-0 mt-0.5 ${
+                        isIncludedInPackage
+                          ? 'bg-emerald-600 text-white'
+                          : isChecked
+                          ? 'bg-amber-600 text-white'
+                          : 'border-2 border-slate-400 bg-white'
+                      }`}
                     >
                       {isChecked && <Check size={14} strokeWidth={3} />}
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center justify-between sm:justify-start gap-2 flex-wrap">
-                        <div className="flex items-center gap-1.5">
+                        <div className="flex items-center gap-1.5 flex-wrap">
                           <span className="font-bold text-sm text-slate-900">{addon.name}</span>
                           {getAddonIcon(addon.id)}
+                          {isIncludedInPackage && (
+                            <span className="text-[10px] font-bold text-emerald-800 bg-emerald-100 border border-emerald-300 px-2 py-0.5 rounded-full">
+                              ✓ Incluido en el Paquete
+                            </span>
+                          )}
                         </div>
                         {/* Mobile Price Badge */}
-                        <span className="sm:hidden font-bold text-amber-700 text-xs bg-amber-100 px-2 py-0.5 rounded-md shrink-0">
-                          +${addon.price} USD
+                        <span className={`sm:hidden font-bold text-xs px-2 py-0.5 rounded-md shrink-0 ${
+                          isIncludedInPackage
+                            ? 'text-emerald-800 bg-emerald-100'
+                            : 'text-amber-700 bg-amber-100'
+                        }`}>
+                          {isIncludedInPackage ? 'Incluido' : `+$${addon.price} RD`}
                         </span>
                       </div>
                       <div className="text-xs text-slate-500 mt-1 leading-relaxed">
@@ -196,8 +264,14 @@ export const EstimatorModal = ({ isOpen, onClose, initialServiceId }: EstimatorM
                   </div>
 
                   {/* Desktop Price */}
-                  <div className="hidden sm:block font-bold text-amber-700 text-sm whitespace-nowrap shrink-0">
-                    +${addon.price} USD
+                  <div className="hidden sm:block font-bold text-sm whitespace-nowrap shrink-0">
+                    {isIncludedInPackage ? (
+                      <span className="inline-flex items-center gap-1 font-bold text-emerald-800 text-xs bg-emerald-100/90 border border-emerald-300 px-2.5 py-1 rounded-lg">
+                        ✓ Incluido
+                      </span>
+                    ) : (
+                      <span className="text-amber-700">+${addon.price} RD</span>
+                    )}
                   </div>
                 </div>
               );
@@ -218,8 +292,8 @@ export const EstimatorModal = ({ isOpen, onClose, initialServiceId }: EstimatorM
               : 'bg-slate-50 border-slate-200/80 hover:bg-slate-100/70'
               }`}
           >
-            <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3 sm:gap-4">
-              <div className="flex items-start gap-3 flex-1 min-w-0">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+              <div className="flex items-start gap-3">
                 <div
                   className={`w-5 h-5 rounded-md flex items-center justify-center shrink-0 mt-0.5 ${includeMaintenance ? 'bg-amber-600 text-white' : 'border-2 border-slate-400 bg-white'
                     }`}
@@ -227,21 +301,18 @@ export const EstimatorModal = ({ isOpen, onClose, initialServiceId }: EstimatorM
                   {includeMaintenance && <Check size={14} strokeWidth={3} />}
                 </div>
                 <div>
-                  <div className="flex items-center gap-2 flex-wrap">
-                    <span className="font-bold text-sm text-slate-900">{MAINTENANCE_PLAN.name}</span>
-                    <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider px-2 py-0.5 bg-amber-100 text-amber-800 rounded-full border border-amber-200">
-                      Recomendado
-                    </span>
+                  <div className="font-bold text-sm text-slate-900">
+                    {MAINTENANCE_PLAN.name}
                   </div>
-                  <p className="text-xs text-slate-600 mt-1 leading-relaxed">
+                  <div className="text-xs text-slate-500 mt-1 leading-relaxed max-w-xl">
                     {MAINTENANCE_PLAN.description}
-                  </p>
+                  </div>
                 </div>
               </div>
 
               <div className="flex sm:flex-col items-center sm:items-end justify-between sm:justify-start pt-2 sm:pt-0 border-t sm:border-t-0 border-slate-200/60 shrink-0">
                 <div className="text-sm sm:text-base font-extrabold text-amber-700 font-['Cinzel']">
-                  +${MAINTENANCE_PLAN.monthlyPrice} USD
+                  +${MAINTENANCE_PLAN.monthlyPrice} RD
                 </div>
                 <div className="text-[10px] text-slate-500 uppercase font-semibold">
                   Facturación Mensual
@@ -251,55 +322,48 @@ export const EstimatorModal = ({ isOpen, onClose, initialServiceId }: EstimatorM
           </div>
         </div>
 
-        {/* Client Name Input */}
+        {/* Step 4: Client Identifier */}
         <div className="mb-6 sm:mb-8">
-          <label className="block text-xs font-bold text-slate-900 mb-1.5 uppercase tracking-wider">
-            Tu Nombre o Empresa (Opcional para el brief):
+          <label className="block text-xs font-bold text-slate-900 mb-2 uppercase tracking-wider">
+            4. TU NOMBRE O EMPRESA (OPCIONAL):
           </label>
           <input
             type="text"
+            placeholder="Ej: Grupo Empresarial Santiago / Ing. Manuel"
             value={clientName}
             onChange={(e) => setClientName(e.target.value)}
-            placeholder="Ej: Alejandro Smith / Mi Empresa"
-            className="w-full px-3.5 sm:px-4 py-2.5 sm:py-3 bg-slate-50 border border-slate-300 rounded-xl text-slate-900 text-xs sm:text-sm outline-none focus:ring-2 focus:ring-amber-500/20 transition-all"
+            className="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-2.5 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-amber-500/40 focus:border-amber-500 transition-all placeholder:text-slate-400"
           />
         </div>
 
-        {/* Summary Card and WhatsApp Action */}
-        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-4 sm:p-6 flex flex-col md:flex-row justify-between items-stretch md:items-center gap-4 sm:gap-6 text-white shadow-xl">
-          <div className="flex items-center justify-between sm:justify-start gap-4 sm:gap-6 flex-wrap">
-            <div>
-              <div className="text-[10px] sm:text-[11px] text-slate-400 uppercase tracking-wider font-semibold">
-                Inversión Inicial Proyecto
-              </div>
+        {/* Summary Footer Bar */}
+        <div className="bg-slate-900 text-white rounded-2xl p-4 sm:p-6 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4 sm:gap-6 shadow-xl">
+          <div>
+            <div className="text-[10px] sm:text-xs text-amber-400 uppercase tracking-wider font-bold mb-1">
+              Presupuesto Preliminar Estimado
+            </div>
+            <div className="flex items-baseline gap-2 flex-wrap">
               <div className="text-2xl sm:text-3xl font-extrabold text-amber-400 font-['Cinzel'] flex items-baseline gap-1.5 flex-wrap">
                 <span>${totalCost}</span>
-                <span className="text-xs sm:text-sm text-slate-300 font-normal">USD</span>
+                <span className="text-xs sm:text-sm text-slate-300 font-normal">RD</span>
                 {includeMaintenance && (
                   <span className="text-xs sm:text-sm font-bold text-emerald-400 block sm:inline sm:ml-1 font-sans">
-                    + ${MAINTENANCE_PLAN.monthlyPrice} USD/mes
+                    + ${MAINTENANCE_PLAN.monthlyPrice} RD/mes
                   </span>
                 )}
               </div>
             </div>
-
-            <div className="border-l border-slate-700 pl-4 sm:pl-6">
-              <div className="text-[10px] sm:text-[11px] text-slate-400 uppercase tracking-wider font-semibold">Plazo de Entrega</div>
-              <div className="flex items-center gap-1.5 sm:gap-2 text-base sm:text-lg font-bold text-slate-100">
-                <Clock size={16} className="text-amber-400 sm:w-[18px] sm:h-[18px]" />
-                <span>~{estimatedDays} días hábiles</span>
-              </div>
+            <div className="text-xs text-slate-400 mt-1 flex items-center gap-1.5">
+              <span>⏱️ Plazo de Entrega: <strong>~{estimatedDays} días hábiles</strong></span>
             </div>
           </div>
 
           <button
             onClick={handleLaunchWhatsApp}
-            className="btn-gold w-full md:w-auto text-center"
-            id="estimator-whatsapp-send-btn"
-            style={{ padding: '0.85rem 1.4rem', fontSize: '0.9rem' }}
+            className="btn-gold py-3 px-6 sm:py-3.5 sm:px-8 rounded-xl font-extrabold text-sm sm:text-base flex items-center justify-center gap-2 shadow-lg hover:shadow-amber-500/25 transition-all transform hover:-translate-y-0.5 cursor-pointer whitespace-nowrap"
           >
-            <Send size={16} />
-            <span>Enviar Cotización a WhatsApp</span>
+            <Send size={18} />
+            <span>Formalizar Cotización por WhatsApp</span>
           </button>
         </div>
       </div>

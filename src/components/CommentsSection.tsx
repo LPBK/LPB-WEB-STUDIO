@@ -141,7 +141,7 @@ export const CommentsSection = () => {
   };
 
   return (
-    <section id="opiniones" className="section-padding relative">
+    <section id="opiniones" className="section-padding relative scroll-mt-24">
       <div className="container-lpb">
         {/* Section Header */}
         <div className="section-header reveal-on-scroll">
@@ -244,8 +244,18 @@ export const CommentsSection = () => {
             <div className="glass-panel p-2.5 sm:p-3.5 rounded-3xl border border-slate-200/80 bg-slate-50/40 shadow-inner">
               <div className="space-y-4 max-h-212.5 overflow-y-auto pr-2 custom-scrollbar">
                 {filteredComments.length === 0 ? (
-                  <div className="glass-panel p-8 text-center text-slate-500 rounded-2xl">
-                    No hay comentarios en este filtro actualmente.
+                  <div className="glass-panel p-8 text-center rounded-2xl border border-slate-200/60 bg-white/70">
+                    <div className="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-400/30 flex items-center justify-center text-amber-600 mx-auto mb-3">
+                      <MessageSquare size={22} />
+                    </div>
+                    <h4 className="text-slate-900 font-bold text-sm mb-1 font-['Cinzel']">
+                      {selectedCategory === 'all' ? 'Aún no hay reseñas publicadas' : 'No hay comentarios en este filtro'}
+                    </h4>
+                    <p className="text-slate-500 text-xs max-w-sm mx-auto">
+                      {selectedCategory === 'all'
+                        ? 'Sé el primero en compartir tu experiencia con LPB WEB Studio completando el formulario.'
+                        : 'Selecciona otro filtro o comparte un comentario en esta categoría.'}
+                    </p>
                   </div>
                 ) : (
                   filteredComments.map((item) => {
@@ -255,35 +265,35 @@ export const CommentsSection = () => {
                     return (
                       <div
                         key={item.id}
-                        className="glass-card-interactive p-5 sm:p-6 rounded-2xl border border-slate-200/80 bg-white/90 shadow-sm transition-all duration-300 hover:shadow-md"
+                        className="glass-card-interactive p-4 sm:p-6 rounded-2xl border border-slate-200/80 bg-white/90 shadow-sm transition-all duration-300 hover:shadow-md"
                       >
                         {/* Top Row: Avatar + Name + Verified Badge + Stars */}
-                        <div className="flex items-start justify-between gap-3 mb-3">
-                          <div className="flex items-center gap-3.5">
+                        <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-2.5 sm:gap-3 mb-3">
+                          <div className="flex items-center gap-3 sm:gap-3.5 min-w-0">
                             {item.avatarUrl ? (
                               <img
                                 src={item.avatarUrl}
                                 alt={authorFull}
-                                className="w-12 h-12 rounded-full object-cover border-2 border-amber-400 shadow-sm shrink-0"
+                                className="w-11 h-11 sm:w-12 sm:h-12 rounded-full object-cover border-2 border-amber-400 shadow-sm shrink-0"
                               />
                             ) : (
-                              <div className="w-12 h-12 rounded-full bg-linear-to-br from-amber-400 via-amber-500 to-amber-700 text-slate-950 font-black text-sm flex items-center justify-center border-2 border-white shadow-sm font-['Cinzel'] shrink-0">
+                              <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-linear-to-br from-amber-400 via-amber-500 to-amber-700 text-slate-950 font-black text-xs sm:text-sm flex items-center justify-center border-2 border-white shadow-sm font-['Cinzel'] shrink-0">
                                 {initials}
                               </div>
                             )}
-                            <div>
+                            <div className="min-w-0 flex-1">
                               <div className="flex items-center gap-1.5 flex-wrap">
-                                <h4 className="font-extrabold text-slate-900 text-base leading-snug">
+                                <h4 className="font-extrabold text-slate-900 text-sm sm:text-base leading-snug break-words">
                                   {authorFull}
                                 </h4>
                                 {item.verified && (
-                                  <span className="inline-flex items-center gap-0.5 text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-300/80 shadow-[0_1px_3px_rgba(5,150,105,0.08)]">
+                                  <span className="inline-flex items-center gap-0.5 text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-300/80 shadow-[0_1px_3px_rgba(5,150,105,0.08)] shrink-0">
                                     <CheckCircle2 size={11} className="text-emerald-600" /> Verificado
                                   </span>
                                 )}
                               </div>
                               {item.role && (
-                                <div className="text-xs text-slate-500 font-medium">
+                                <div className="text-[11px] sm:text-xs text-slate-500 font-medium truncate">
                                   {item.role}
                                 </div>
                               )}
@@ -291,11 +301,11 @@ export const CommentsSection = () => {
                           </div>
 
                           {/* Star Rating */}
-                          <div className="flex items-center gap-0.5 bg-amber-50/80 border border-amber-200/60 px-2.5 py-1 rounded-xl shrink-0">
+                          <div className="flex items-center gap-0.5 bg-amber-50/90 border border-amber-200/70 px-2.5 py-1 rounded-xl shrink-0 self-start sm:self-auto w-fit">
                             {[...Array(5)].map((_, i) => (
                               <Star
                                 key={i}
-                                size={14}
+                                size={13}
                                 className={i < item.rating ? 'fill-amber-400 text-amber-500' : 'text-slate-300'}
                               />
                             ))}
@@ -306,16 +316,16 @@ export const CommentsSection = () => {
                         </div>
 
                         {/* Project Tag Banner */}
-                        <div className="inline-flex items-center gap-1.5 bg-linear-to-r from-amber-50/90 to-slate-50 border border-amber-200/80 px-3 py-1.5 rounded-xl text-xs text-slate-800 font-medium mb-3.5 flex-wrap">
+                        <div className="inline-flex items-center gap-1.5 bg-linear-to-r from-amber-50/90 to-slate-50 border border-amber-200/80 px-3 py-1.5 rounded-xl text-xs text-slate-800 font-medium mb-3.5 flex-wrap max-w-full">
                           <FolderGit2 size={13} className="text-amber-700 shrink-0" />
                           <span className="text-amber-900 font-bold">Proyecto:</span>
-                          <span className="font-bold text-slate-900">{item.projectName}</span>
+                          <span className="font-bold text-slate-900 break-words">{item.projectName}</span>
                           <span className="text-amber-400">•</span>
-                          <span className="text-slate-600 font-semibold text-[11px]">{item.projectType}</span>
+                          <span className="text-slate-600 font-semibold text-[11px] break-words">{item.projectType}</span>
                         </div>
 
                         {/* Comment Message */}
-                        <p className="text-slate-700 text-sm leading-relaxed mb-4 bg-slate-50/60 p-3.5 rounded-xl border border-slate-100">
+                        <p className="text-slate-700 text-sm leading-relaxed mb-4 bg-slate-50/60 p-3.5 rounded-xl border border-slate-100 break-words">
                           "{item.comment}"
                         </p>
 

@@ -1,4 +1,3 @@
-import { INITIAL_COMMENTS } from '../data/commentsData';
 import { sql, isNeonConfigured } from '../db/neonClient';
 import type { CommentItem, CommentFormData } from '../types';
 
@@ -8,21 +7,16 @@ export interface ExtendedCommentItem extends CommentItem {
 
 const STORAGE_KEY = 'lpb_comments_db_v1';
 
-// Initial DB seed if empty
+// Initial DB seed if empty: clean empty array so it is 100% database-driven
 const getStoredComments = (): ExtendedCommentItem[] => {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) {
-      const initialWithApproved: ExtendedCommentItem[] = INITIAL_COMMENTS.map(c => ({
-        ...c,
-        approved: true
-      }));
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(initialWithApproved));
-      return initialWithApproved;
+      return [];
     }
     return JSON.parse(raw);
   } catch {
-    return INITIAL_COMMENTS.map(c => ({ ...c, approved: true }));
+    return [];
   }
 };
 
@@ -36,9 +30,11 @@ const saveStoredComments = (comments: ExtendedCommentItem[]) => {
 };
 
 export const commentsService = {
-  // Sync comments from Neon DB if connected
+  // Sync comments directly from Neon DB table
   async syncFromNeon(): Promise<ExtendedCommentItem[]> {
-    if (!isNeonConfigured || !sql) return getStoredComments();
+    if (!isNeonConfigured || !sql) {
+      return getStoredComments();
+    }
 
     try {
       const rows = await sql`
@@ -59,13 +55,13 @@ export const commentsService = {
         ORDER BY created_at DESC
       `;
 
-      if (rows && rows.length > 0) {
+      if (rows) {
         const mapped = rows as unknown as ExtendedCommentItem[];
         saveStoredComments(mapped);
         return mapped;
       }
     } catch (err) {
-      console.warn('Neon DB query fallback to local cache:', err);
+      console.warn('Neon DB query error:', err);
     }
     return getStoredComments();
   },
@@ -73,7 +69,7 @@ export const commentsService = {
   // Get all approved comments for public view
   getApprovedComments(): ExtendedCommentItem[] {
     const all = getStoredComments();
-    return all.filter(c => c.approved !== false);
+    return all.filter(c => c.approved === true);
   },
 
   // Get only pending comments for admin view
@@ -108,7 +104,7 @@ export const commentsService = {
     const updated = [newComment, ...all];
     saveStoredComments(updated);
 
-    // If Neon connected, insert to remote DB
+    // If Neon connected, insert directly to remote DB
     if (isNeonConfigured && sql) {
       try {
         await sql`
@@ -144,12 +140,10 @@ export const commentsService = {
     return true;
   },
 
-  // Reject / Delete a comment
+  // Reject / Delete a comment permanently
   async deleteComment(id: string): Promise<boolean> {
     const all = getStoredComments();
     const filtered = all.filter(c => c.id !== id);
-    if (filtered.length === all.length) return false;
-
     saveStoredComments(filtered);
 
     if (isNeonConfigured && sql) {

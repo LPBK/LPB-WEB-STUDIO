@@ -59,13 +59,12 @@ export const Footer = ({ onOpenAdmin }: FooterProps) => {
               Ingeniería de software y desarrollo web a medida. Diseñamos plataformas digitales eficientes, escalables y optimizadas para negocios que buscan distinción y alto rendimiento.
             </p>
             <div className="flex flex-col gap-2 text-xs text-slate-300">
-              <a
-                href="tel:+18293522441"
+              <p
                 className="flex items-center gap-2 hover:text-amber-400 transition-colors"
               >
                 <Phone size={14} className="text-amber-400" />
-                <span>+1 (829) 352-2441 (Llamadas & WhatsApp)</span>
-              </a>
+                <span>+1 (829) 352-2441 ( WhatsApp)</span>
+              </p>
               <a
                 href="mailto:contacto@lpbwebstudio.dev"
                 className="flex items-center gap-2 hover:text-amber-400 transition-colors"

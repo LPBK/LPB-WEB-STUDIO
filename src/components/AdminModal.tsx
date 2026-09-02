@@ -16,7 +16,8 @@ import {
   LogOut,
   FolderGit2,
   Edit3,
-  Image as ImageIcon
+  Image as ImageIcon,
+  Plus
 } from 'lucide-react';
 import { adminAuthService } from '../services/adminAuthService';
 import { commentsService } from '../services/commentsService';
@@ -47,6 +48,7 @@ export const AdminModal = ({ isOpen, onClose }: AdminModalProps) => {
   // Projects State
   const [projects, setProjects] = useState<ProjectItem[]>([]);
   const [editingProject, setEditingProject] = useState<ProjectItem | null>(null);
+  const [isCreatingNewProject, setIsCreatingNewProject] = useState(false);
   const [tagsInput, setTagsInput] = useState('');
 
   const [actionSuccessMsg, setActionSuccessMsg] = useState<string | null>(null);
@@ -183,26 +185,78 @@ export const AdminModal = ({ isOpen, onClose }: AdminModalProps) => {
 
   // Projects Actions
   const handleOpenEditProject = (project: ProjectItem) => {
+    setIsCreatingNewProject(false);
     setEditingProject({ ...project });
     setTagsInput((project.tags || []).join(', '));
   };
 
+  const handleOpenCreateProject = () => {
+    setIsCreatingNewProject(true);
+    setEditingProject({
+      id: `proj-${Date.now()}`,
+      title: '',
+      tagline: '',
+      category: 'web',
+      categoryLabel: 'E-Commerce & Web',
+      isLive: false,
+      statusText: 'Arquitectura LPB',
+      description: '',
+      imageUrl: '',
+      projectUrl: '#contacto',
+      highlights: [],
+      tags: [],
+      accentColor: '#d4af37'
+    });
+    setTagsInput('');
+  };
+
+  const handleDeleteProject = async (id: string, title?: string) => {
+    const projectLabel = title ? `"${title}"` : 'este proyecto';
+    if (
+      window.confirm(
+        `¿Deseas eliminar permanentemente ${projectLabel}?\n\nEsta acción ejecutará un DELETE completo en la base de datos de Neon para liberar espacio de almacenamiento.`
+      )
+    ) {
+      setIsLoading(true);
+      await projectsService.deleteProject(id);
+      await refreshAll();
+      showActionNotice('🗑️ Proyecto purgado con DELETE completo de la base de datos.');
+      setIsLoading(false);
+    }
+  };
+
   const handleSaveProjectEdit = async () => {
     if (!editingProject) return;
+
+    if (!editingProject.title.trim()) {
+      alert('Por favor introduce un título para el proyecto.');
+      return;
+    }
 
     const parsedTags = tagsInput
       .split(',')
       .map(t => t.trim())
       .filter(Boolean);
 
-    await projectsService.updateProject(editingProject.id, {
-      ...editingProject,
-      tags: parsedTags
-    });
+    setIsLoading(true);
+    if (isCreatingNewProject) {
+      await projectsService.createProject({
+        ...editingProject,
+        tags: parsedTags
+      });
+      showActionNotice('✨ Nuevo proyecto registrado en la base de datos.');
+    } else {
+      await projectsService.updateProject(editingProject.id, {
+        ...editingProject,
+        tags: parsedTags
+      });
+      showActionNotice('💾 Proyecto actualizado en base de datos y reflejado en el portafolio.');
+    }
 
     setEditingProject(null);
+    setIsCreatingNewProject(false);
     await refreshAll();
-    showActionNotice('💾 Proyecto actualizado en base de datos y reflejado en el portafolio.');
+    setIsLoading(false);
   };
 
   const showActionNotice = (msg: string) => {
@@ -581,75 +635,146 @@ export const AdminModal = ({ isOpen, onClose }: AdminModalProps) => {
                  TAB 3: PORTFOLIO / PROJECTS MANAGEMENT
                  ========================================================================= */}
               {activeTab === 'projects' && (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {projects.map(proj => (
-                    <div
-                      key={proj.id}
-                      className="bg-slate-950/60 border border-slate-800 rounded-2xl p-4 flex flex-col justify-between gap-3 hover:border-amber-500/40 transition-all"
-                    >
-                      <div>
-                        {/* Image Preview & Badge */}
-                        <div className="relative h-28 w-full rounded-xl overflow-hidden bg-slate-900 mb-3 border border-slate-800">
-                          {proj.imageUrl ? (
-                            <img
-                              src={proj.imageUrl}
-                              alt={proj.title}
-                              className="w-full h-full object-cover"
-                              onError={e => {
-                                (e.target as HTMLImageElement).src = '/assets/inmo.png';
-                              }}
-                            />
-                          ) : (
-                            <div className="w-full h-full flex items-center justify-center text-slate-600">
-                              <ImageIcon size={24} />
-                            </div>
-                          )}
-                          <div className="absolute top-2 left-2 flex items-center gap-1.5 bg-slate-950/80 backdrop-blur-xs border border-white/10 px-2 py-0.5 rounded-md text-[10px] font-bold text-amber-400">
-                            {proj.categoryLabel}
-                          </div>
-                          {proj.isLive && (
-                            <div className="absolute top-2 right-2 flex items-center gap-1 bg-emerald-500/80 text-white px-2 py-0.5 rounded-md text-[10px] font-bold">
-                              ● En Vivo
-                            </div>
-                          )}
-                        </div>
+                <div className="space-y-4">
+                  {/* Top Bar for Projects Management */}
+                  <div className="flex items-center justify-between bg-slate-950/50 p-3 rounded-2xl border border-slate-800 flex-wrap gap-2">
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs text-slate-400">
+                        Proyectos registrados: <strong className="text-amber-400">{projects.length}</strong>
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <button
+                        type="button"
+                        onClick={refreshAll}
+                        disabled={isLoading}
+                        className="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white border border-slate-700 cursor-pointer transition-colors"
+                        title="Sincronizar con Neon DB"
+                      >
+                        <RefreshCw size={13} className={isLoading ? 'animate-spin text-amber-400' : ''} />
+                      </button>
+                      <button
+                        type="button"
+                        onClick={handleOpenCreateProject}
+                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-bold transition-all cursor-pointer shadow-sm shadow-amber-500/20"
+                      >
+                        <Plus size={14} />
+                        <span>Nuevo Proyecto</span>
+                      </button>
+                    </div>
+                  </div>
 
-                        <h4 className="text-sm font-bold text-white font-['Cinzel'] line-clamp-1">
-                          {proj.title}
-                        </h4>
-                        <div className="text-[11px] text-amber-400 font-semibold mb-1 line-clamp-1">
-                          {proj.tagline}
-                        </div>
-                        <p className="text-xs text-slate-400 leading-relaxed line-clamp-2 mb-2">
-                          {proj.description}
-                        </p>
-
-                        {/* Tech tags preview */}
-                        <div className="flex flex-wrap gap-1 mb-2">
-                          {(proj.tags || []).slice(0, 4).map((tag, idx) => (
-                            <span
-                              key={idx}
-                              className="text-[10px] bg-slate-800 text-slate-300 px-1.5 py-0.5 rounded border border-slate-700"
-                            >
-                              #{tag}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-
-                      <div className="flex items-center justify-between pt-2 border-t border-slate-800 text-xs">
-                        <span className="text-slate-500 text-[11px]">{proj.statusText}</span>
+                  {projects.length === 0 ? (
+                    <div className="text-center py-12 border border-dashed border-slate-800 rounded-2xl p-6 bg-slate-950/20">
+                      <FolderGit2 className="w-12 h-12 text-slate-600 mx-auto mb-3" />
+                      <p className="text-sm font-semibold text-slate-300 mb-1">No hay proyectos en el portafolio</p>
+                      <p className="text-xs text-slate-500 max-w-sm mx-auto mb-4">
+                        Se han eliminado los proyectos de la base de datos para liberar espacio. Puedes añadir uno nuevo o restaurar los de demostración.
+                      </p>
+                      <div className="flex items-center justify-center gap-3">
                         <button
                           type="button"
-                          onClick={() => handleOpenEditProject(proj)}
-                          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-bold transition-colors cursor-pointer shadow-sm shadow-amber-500/20"
+                          onClick={handleOpenCreateProject}
+                          className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-bold transition-colors cursor-pointer"
                         >
-                          <Edit3 size={13} />
-                          <span>Editar Proyecto</span>
+                          <Plus size={14} />
+                          <span>Crear Proyecto</span>
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            projectsService.resetToDefaults();
+                            refreshAll();
+                          }}
+                          className="px-3.5 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold border border-slate-700 cursor-pointer"
+                        >
+                          Restaurar Demos
                         </button>
                       </div>
                     </div>
-                  ))}
+                  ) : (
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      {projects.map(proj => (
+                        <div
+                          key={proj.id}
+                          className="bg-slate-950/60 border border-slate-800 rounded-2xl p-4 flex flex-col justify-between gap-3 hover:border-amber-500/40 transition-all"
+                        >
+                          <div>
+                            {/* Image Preview & Badge */}
+                            <div className="relative h-28 w-full rounded-xl overflow-hidden bg-slate-900 mb-3 border border-slate-800">
+                              {proj.imageUrl ? (
+                                <img
+                                  src={proj.imageUrl}
+                                  alt={proj.title}
+                                  className="w-full h-full object-cover"
+                                  onError={e => {
+                                    (e.target as HTMLImageElement).src = '/assets/inmo.png';
+                                  }}
+                                />
+                              ) : (
+                                <div className="w-full h-full flex items-center justify-center text-slate-600">
+                                  <ImageIcon size={24} />
+                                </div>
+                              )}
+                              <div className="absolute top-2 left-2 flex items-center gap-1.5 bg-slate-950/80 backdrop-blur-xs border border-white/10 px-2 py-0.5 rounded-md text-[10px] font-bold text-amber-400">
+                                {proj.categoryLabel}
+                              </div>
+                              {proj.isLive && (
+                                <div className="absolute top-2 right-2 flex items-center gap-1 bg-emerald-500/80 text-white px-2 py-0.5 rounded-md text-[10px] font-bold">
+                                  ● En Vivo
+                                </div>
+                              )}
+                            </div>
+
+                            <h4 className="text-sm font-bold text-white font-['Cinzel'] line-clamp-1">
+                              {proj.title}
+                            </h4>
+                            <div className="text-[11px] text-amber-400 font-semibold mb-1 line-clamp-1">
+                              {proj.tagline}
+                            </div>
+                            <p className="text-xs text-slate-400 leading-relaxed line-clamp-2 mb-2">
+                              {proj.description}
+                            </p>
+
+                            {/* Tech tags preview */}
+                            <div className="flex flex-wrap gap-1 mb-2">
+                              {(proj.tags || []).slice(0, 4).map((tag, idx) => (
+                                <span
+                                  key={idx}
+                                  className="text-[10px] bg-slate-800 text-slate-300 px-1.5 py-0.5 rounded border border-slate-700"
+                                >
+                                  #{tag}
+                                </span>
+                              ))}
+                            </div>
+                          </div>
+
+                          <div className="flex items-center justify-between pt-2 border-t border-slate-800 text-xs">
+                            <span className="text-slate-500 text-[11px]">{proj.statusText}</span>
+                            <div className="flex items-center gap-2">
+                              <button
+                                type="button"
+                                onClick={() => handleDeleteProject(proj.id, proj.title)}
+                                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-rose-500/15 hover:bg-rose-500/25 text-rose-400 hover:text-rose-300 border border-rose-500/30 text-xs font-bold transition-colors cursor-pointer"
+                                title="Eliminar proyecto con DELETE completo de la base de datos"
+                              >
+                                <Trash2 size={13} />
+                                <span>Eliminar</span>
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => handleOpenEditProject(proj)}
+                                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-bold transition-colors cursor-pointer shadow-sm shadow-amber-500/20"
+                              >
+                                <Edit3 size={13} />
+                                <span>Editar Proyecto</span>
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
               )}
             </div>
@@ -739,12 +864,15 @@ export const AdminModal = ({ isOpen, onClose }: AdminModalProps) => {
           <div className="bg-slate-900 border border-amber-500/50 rounded-3xl p-6 w-full max-w-xl space-y-4 text-slate-100 shadow-2xl my-6 max-h-[85vh] overflow-y-auto custom-scrollbar">
             <div className="flex items-center justify-between border-b border-slate-800 pb-3">
               <h4 className="text-base font-bold text-white font-['Cinzel'] flex items-center gap-2">
-                <Edit3 size={16} className="text-amber-400" />
-                Editar Información del Proyecto
+                {isCreatingNewProject ? <Plus size={16} className="text-amber-400" /> : <Edit3 size={16} className="text-amber-400" />}
+                {isCreatingNewProject ? 'Registrar Nuevo Proyecto' : 'Editar Información del Proyecto'}
               </h4>
               <button
-                onClick={() => setEditingProject(null)}
-                className="p-1 rounded-lg text-slate-400 hover:text-white"
+                onClick={() => {
+                  setEditingProject(null);
+                  setIsCreatingNewProject(false);
+                }}
+                className="p-1 rounded-lg text-slate-400 hover:text-white cursor-pointer"
               >
                 <X size={18} />
               </button>
@@ -758,6 +886,7 @@ export const AdminModal = ({ isOpen, onClose }: AdminModalProps) => {
                     type="text"
                     value={editingProject.title}
                     onChange={e => setEditingProject({ ...editingProject, title: e.target.value })}
+                    placeholder="Ej. Nexus Flow PWA"
                     className="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-white focus:outline-none"
                   />
                 </div>
@@ -767,6 +896,46 @@ export const AdminModal = ({ isOpen, onClose }: AdminModalProps) => {
                     type="text"
                     value={editingProject.tagline || ''}
                     onChange={e => setEditingProject({ ...editingProject, tagline: e.target.value })}
+                    placeholder="Ej. Plataforma E-Commerce de Alto Rendimiento"
+                    className="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-white focus:outline-none"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-slate-300 font-semibold mb-1">Categoría:</label>
+                  <select
+                    value={editingProject.category}
+                    onChange={e => {
+                      const cat = e.target.value as 'web' | 'pwa' | 'dashboard' | 'database';
+                      const labels: Record<string, string> = {
+                        web: 'E-Commerce & Web',
+                        pwa: 'PWA Offline-First',
+                        dashboard: 'Dashboard & RBAC',
+                        database: 'Cloud & Database'
+                      };
+                      setEditingProject({
+                        ...editingProject,
+                        category: cat,
+                        categoryLabel: labels[cat] || 'Web a Medida'
+                      });
+                    }}
+                    className="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-white focus:outline-none cursor-pointer"
+                  >
+                    <option value="web">E-Commerce & Web</option>
+                    <option value="pwa">PWA Offline-First</option>
+                    <option value="dashboard">Dashboard & RBAC</option>
+                    <option value="database">Cloud & Database</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-slate-300 font-semibold mb-1">Etiqueta de Estado:</label>
+                  <input
+                    type="text"
+                    value={editingProject.statusText || ''}
+                    onChange={e => setEditingProject({ ...editingProject, statusText: e.target.value })}
+                    placeholder="Ej. En Producción / Arquitectura LPB"
                     className="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-white focus:outline-none"
                   />
                 </div>
@@ -778,6 +947,7 @@ export const AdminModal = ({ isOpen, onClose }: AdminModalProps) => {
                   rows={3}
                   value={editingProject.description}
                   onChange={e => setEditingProject({ ...editingProject, description: e.target.value })}
+                  placeholder="Descripción de la solución técnica, capacidades y arquitectura..."
                   className="w-full bg-slate-800 border border-slate-700 rounded-xl p-3 text-white resize-none focus:outline-none"
                 />
               </div>
@@ -789,7 +959,7 @@ export const AdminModal = ({ isOpen, onClose }: AdminModalProps) => {
                     type="text"
                     value={editingProject.imageUrl || ''}
                     onChange={e => setEditingProject({ ...editingProject, imageUrl: e.target.value })}
-                    placeholder="/assets/inmo.png o URL externa"
+                    placeholder="/assets/inmo.png o https://..."
                     className="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-white focus:outline-none"
                   />
                 </div>
@@ -805,28 +975,16 @@ export const AdminModal = ({ isOpen, onClose }: AdminModalProps) => {
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <div>
-                  <label className="block text-slate-300 font-semibold mb-1">Etiqueta de Estado:</label>
+              <div className="flex items-center gap-3 py-1">
+                <label className="flex items-center gap-2 cursor-pointer select-none">
                   <input
-                    type="text"
-                    value={editingProject.statusText || ''}
-                    onChange={e => setEditingProject({ ...editingProject, statusText: e.target.value })}
-                    placeholder="Ej. En Producción / Arquitectura LPB"
-                    className="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-white focus:outline-none"
+                    type="checkbox"
+                    checked={editingProject.isLive || false}
+                    onChange={e => setEditingProject({ ...editingProject, isLive: e.target.checked })}
+                    className="w-4 h-4 rounded text-amber-500 cursor-pointer"
                   />
-                </div>
-                <div className="flex items-center gap-3 pt-5">
-                  <label className="flex items-center gap-2 cursor-pointer select-none">
-                    <input
-                      type="checkbox"
-                      checked={editingProject.isLive || false}
-                      onChange={e => setEditingProject({ ...editingProject, isLive: e.target.checked })}
-                      className="w-4 h-4 rounded text-amber-500"
-                    />
-                    <span className="text-slate-300 font-semibold">¿Proyecto en Producción / En Vivo?</span>
-                  </label>
-                </div>
+                  <span className="text-slate-300 font-semibold">¿Proyecto en Producción / En Vivo?</span>
+                </label>
               </div>
 
               <div>
@@ -843,21 +1001,41 @@ export const AdminModal = ({ isOpen, onClose }: AdminModalProps) => {
               </div>
             </div>
 
-            <div className="flex items-center justify-end gap-2 pt-3 border-t border-slate-800">
-              <button
-                type="button"
-                onClick={() => setEditingProject(null)}
-                className="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold text-xs cursor-pointer"
-              >
-                Cancelar
-              </button>
-              <button
-                type="button"
-                onClick={handleSaveProjectEdit}
-                className="px-5 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs cursor-pointer shadow-md shadow-amber-500/20"
-              >
-                Guardar Cambios en Portafolio
-              </button>
+            <div className="flex items-center justify-between pt-3 border-t border-slate-800">
+              {!isCreatingNewProject ? (
+                <button
+                  type="button"
+                  onClick={() => {
+                    const p = editingProject;
+                    setEditingProject(null);
+                    handleDeleteProject(p.id, p.title);
+                  }}
+                  className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-rose-500/15 hover:bg-rose-500/25 text-rose-400 hover:text-rose-300 border border-rose-500/30 font-bold text-xs cursor-pointer transition-colors"
+                  title="Eliminar con DELETE completo en la base de datos"
+                >
+                  <Trash2 size={14} />
+                  <span>Eliminar de BD</span>
+                </button>
+              ) : <div />}
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setEditingProject(null);
+                    setIsCreatingNewProject(false);
+                  }}
+                  className="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold text-xs cursor-pointer"
+                >
+                  Cancelar
+                </button>
+                <button
+                  type="button"
+                  onClick={handleSaveProjectEdit}
+                  className="px-5 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs cursor-pointer shadow-md shadow-amber-500/20"
+                >
+                  {isCreatingNewProject ? 'Registrar Proyecto en BD' : 'Guardar Cambios en Portafolio'}
+                </button>
+              </div>
             </div>
           </div>
         </div>

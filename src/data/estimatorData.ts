@@ -5,7 +5,7 @@ export const PROJECT_TYPES: EstimatorOption[] = [
     id: 'pwa-app',
     name: 'Progressive Web App (PWA)',
     description: 'Aplicación ultra-rápida, instalable en móviles y desktop con capacidades offline. Incluye Autenticación Básica (login/registro con correo o proveedor OAuth simple).',
-    basePrice: 25000,
+    basePrice: 30000,
     estimatedDays: 14,
     icon: 'Smartphone'
   },

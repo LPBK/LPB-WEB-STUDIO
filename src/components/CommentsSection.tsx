@@ -242,7 +242,7 @@ export const CommentsSection = () => {
 
             {/* List of Comment Cards Container with Border Radius and Custom Scrollbar */}
             <div className="glass-panel p-2.5 sm:p-3.5 rounded-3xl border border-slate-200/80 bg-slate-50/40 shadow-inner">
-              <div className="space-y-4 max-h-[850px] overflow-y-auto pr-2 custom-scrollbar">
+              <div className="space-y-4 max-h-212.5 overflow-y-auto pr-2 custom-scrollbar">
                 {filteredComments.length === 0 ? (
                   <div className="glass-panel p-8 text-center text-slate-500 rounded-2xl">
                     No hay comentarios en este filtro actualmente.
@@ -267,7 +267,7 @@ export const CommentsSection = () => {
                                 className="w-12 h-12 rounded-full object-cover border-2 border-amber-400 shadow-sm shrink-0"
                               />
                             ) : (
-                              <div className="w-12 h-12 rounded-full bg-gradient-to-br from-amber-400 via-amber-500 to-amber-700 text-slate-950 font-black text-sm flex items-center justify-center border-2 border-white shadow-sm font-['Cinzel'] shrink-0">
+                              <div className="w-12 h-12 rounded-full bg-linear-to-br from-amber-400 via-amber-500 to-amber-700 text-slate-950 font-black text-sm flex items-center justify-center border-2 border-white shadow-sm font-['Cinzel'] shrink-0">
                                 {initials}
                               </div>
                             )}
@@ -306,7 +306,7 @@ export const CommentsSection = () => {
                         </div>
 
                         {/* Project Tag Banner */}
-                        <div className="inline-flex items-center gap-1.5 bg-gradient-to-r from-amber-50/90 to-slate-50 border border-amber-200/80 px-3 py-1.5 rounded-xl text-xs text-slate-800 font-medium mb-3.5 flex-wrap">
+                        <div className="inline-flex items-center gap-1.5 bg-linear-to-r from-amber-50/90 to-slate-50 border border-amber-200/80 px-3 py-1.5 rounded-xl text-xs text-slate-800 font-medium mb-3.5 flex-wrap">
                           <FolderGit2 size={13} className="text-amber-700 shrink-0" />
                           <span className="text-amber-900 font-bold">Proyecto:</span>
                           <span className="font-bold text-slate-900">{item.projectName}</span>
@@ -335,7 +335,7 @@ export const CommentsSection = () => {
               SUBSECCIÓN 2: FORMULARIO PARA DEJAR UN COMENTARIO (5 COLUMNS)
               ========================================================================= */}
           <div className="lg:col-span-5">
-            <div className="glass-panel p-6 sm:p-8 rounded-3xl border border-amber-200/70 bg-gradient-to-br from-white/95 via-amber-50/20 to-white/90 shadow-[0_20px_40px_-15px_rgba(15,23,42,0.06)] relative sticky top-24">
+            <div className="glass-panel p-6 sm:p-8 rounded-3xl border border-amber-200/70 bg-linear-to-br from-white/95 via-amber-50/20 to-white/90 shadow-[0_20px_40px_-15px_rgba(15,23,42,0.06)] sticky top-24">
               <div className="flex items-center gap-2.5 mb-2">
                 <div className="w-8 h-8 rounded-xl bg-amber-500/10 border border-amber-400/40 flex items-center justify-center text-amber-700">
                   <Sparkles size={16} />
@@ -413,7 +413,7 @@ export const CommentsSection = () => {
                         placeholder="Ej. Ing. Carlos"
                         value={formData.authorName}
                         onChange={e => setFormData(prev => ({ ...prev, authorName: e.target.value }))}
-                        className="w-full bg-white border border-slate-200/90 rounded-xl pl-9 pr-3 py-2 text-sm text-slate-900 focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20"
+                        className="w-full bg-white border border-slate-200/90 rounded-xl pl-9 pr-3 py-2 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-amber-500/20"
                       />
                     </div>
                   </div>
@@ -428,7 +428,7 @@ export const CommentsSection = () => {
                       placeholder="Ej. M."
                       value={formData.authorLastNameInitial}
                       onChange={e => setFormData(prev => ({ ...prev, authorLastNameInitial: e.target.value }))}
-                      className="w-full bg-white border border-slate-200/90 rounded-xl px-3 py-2 text-sm text-slate-900 focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20"
+                      className="w-full bg-white border border-slate-200/90 rounded-xl px-3 py-2 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-amber-500/20"
                     />
                   </div>
                 </div>
@@ -445,7 +445,7 @@ export const CommentsSection = () => {
                       placeholder="Ej. Mi-empresa"
                       value={formData.role}
                       onChange={e => setFormData(prev => ({ ...prev, role: e.target.value }))}
-                      className="w-full bg-white border border-slate-200/90 rounded-xl pl-9 pr-3 py-2 text-sm text-slate-900 focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20"
+                      className="w-full bg-white border border-slate-200/90 rounded-xl pl-9 pr-3 py-2 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-amber-500/20"
                     />
                   </div>
                 </div>
@@ -464,7 +464,7 @@ export const CommentsSection = () => {
                         placeholder="Ej. Mi proyecto"
                         value={formData.projectName}
                         onChange={e => setFormData(prev => ({ ...prev, projectName: e.target.value }))}
-                        className="w-full bg-white border border-slate-200/90 rounded-xl pl-9 pr-3 py-2 text-sm text-slate-900 focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20"
+                        className="w-full bg-white border border-slate-200/90 rounded-xl pl-9 pr-3 py-2 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-amber-500/20"
                       />
                     </div>
                   </div>
@@ -476,7 +476,7 @@ export const CommentsSection = () => {
                     <select
                       value={formData.projectType}
                       onChange={e => setFormData(prev => ({ ...prev, projectType: e.target.value }))}
-                      className="w-full bg-white border border-slate-200/90 rounded-xl px-3 py-2 text-sm text-slate-900 focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20"
+                      className="w-full bg-white border border-slate-200/90 rounded-xl px-3 py-2 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-amber-500/20"
                     >
                       {AVAILABLE_PROJECT_TYPES.map(type => (
                         <option key={type} value={type}>
@@ -502,7 +502,7 @@ export const CommentsSection = () => {
                         />
                       </div>
                     ) : (
-                      <div className="w-12 h-12 rounded-full bg-gradient-to-br from-amber-400 to-amber-600 text-slate-950 font-black text-xs flex items-center justify-center font-['Cinzel'] shrink-0 border border-white shadow-sm">
+                      <div className="w-12 h-12 rounded-full bg-linear-to-br from-amber-400 to-amber-600 text-slate-950 font-black text-xs flex items-center justify-center font-['Cinzel'] shrink-0 border border-white shadow-sm">
                         {(formData.authorName.charAt(0) || 'L') + (formData.authorLastNameInitial.charAt(0) || 'P')}
                       </div>
                     )}
@@ -548,7 +548,7 @@ export const CommentsSection = () => {
                     placeholder="Cuéntanos tu experiencia trabajando con LPB WEB Studio, resultados obtenidos, velocidad, diseño, etc..."
                     value={formData.comment}
                     onChange={e => setFormData(prev => ({ ...prev, comment: e.target.value }))}
-                    className="w-full bg-white border border-slate-200/90 rounded-xl p-3 text-sm text-slate-900 focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 leading-relaxed resize-none"
+                    className="w-full bg-white border border-slate-200/90 rounded-xl p-3 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-amber-500/20 leading-relaxed resize-none"
                   />
                   <div className="flex justify-between items-center text-[11px] text-slate-400 mt-1">
                     <span>Mínimo 15 caracteres</span>

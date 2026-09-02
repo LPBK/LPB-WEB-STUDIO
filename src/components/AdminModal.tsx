@@ -16,7 +16,6 @@ import {
   LogOut,
   FolderGit2,
   Edit3,
-  ExternalLink,
   Image as ImageIcon
 } from 'lucide-react';
 import { adminAuthService } from '../services/adminAuthService';
@@ -227,7 +226,7 @@ export const AdminModal = ({ isOpen, onClose }: AdminModalProps) => {
       {/* Modal Card */}
       <div className="relative w-full max-w-4xl bg-slate-900 border border-amber-500/40 rounded-3xl shadow-[0_25px_60px_-15px_rgba(0,0,0,0.8),0_0_30px_rgba(212,175,55,0.15)] overflow-hidden z-10 my-6 text-slate-100 animate-in zoom-in-95 duration-200">
         {/* Top Gold Accent Bar */}
-        <div className="h-1.5 bg-gradient-to-r from-amber-600 via-amber-400 to-amber-600" />
+        <div className="h-1.5 bg-linear-to-r from-amber-600 via-amber-400 to-amber-600" />
 
         {/* Modal Header */}
         <div className="px-6 py-4 bg-slate-950/70 border-b border-slate-800 flex items-center justify-between">
@@ -323,17 +322,16 @@ export const AdminModal = ({ isOpen, onClose }: AdminModalProps) => {
                 {[0, 1, 2, 3, 4, 5].map(idx => (
                   <div
                     key={idx}
-                    className={`w-3.5 h-3.5 sm:w-4 sm:h-4 rounded-full border-2 transition-all duration-200 ${
-                      pinInput.length > idx
-                        ? 'bg-amber-400 border-amber-300 shadow-[0_0_10px_#f59e0b]'
-                        : 'border-slate-700 bg-slate-800/80'
-                    }`}
+                    className={`w-3.5 h-3.5 sm:w-4 sm:h-4 rounded-full border-2 transition-all duration-200 ${pinInput.length > idx
+                      ? 'bg-amber-400 border-amber-300 shadow-[0_0_10px_#f59e0b]'
+                      : 'border-slate-700 bg-slate-800/80'
+                      }`}
                   />
                 ))}
               </div>
 
               {/* Luxury Keypad */}
-              <div className="grid grid-cols-3 gap-2.5 max-w-[260px] mx-auto">
+              <div className="grid grid-cols-3 gap-2.5 max-w-65 mx-auto">
                 {['1', '2', '3', '4', '5', '6', '7', '8', '9', 'C', '0', '✓'].map(btn => (
                   <button
                     key={btn}
@@ -344,13 +342,12 @@ export const AdminModal = ({ isOpen, onClose }: AdminModalProps) => {
                       else if (btn === '✓') handlePinSubmit();
                       else handleKeypadPress(btn);
                     }}
-                    className={`h-12 rounded-2xl font-bold text-base transition-all duration-150 flex items-center justify-center cursor-pointer ${
-                      btn === '✓'
-                        ? 'bg-amber-500 hover:bg-amber-400 text-slate-950 shadow-[0_0_15px_rgba(245,158,11,0.3)]'
-                        : btn === 'C'
+                    className={`h-12 rounded-2xl font-bold text-base transition-all duration-150 flex items-center justify-center cursor-pointer ${btn === '✓'
+                      ? 'bg-amber-500 hover:bg-amber-400 text-slate-950 shadow-[0_0_15px_rgba(245,158,11,0.3)]'
+                      : btn === 'C'
                         ? 'bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white border border-slate-700'
                         : 'bg-slate-800/90 hover:bg-slate-700 text-white border border-slate-700/80 hover:border-amber-400/50 active:scale-95'
-                    } ${authState.isLocked ? 'opacity-40 cursor-not-allowed' : ''}`}
+                      } ${authState.isLocked ? 'opacity-40 cursor-not-allowed' : ''}`}
                   >
                     {btn}
                   </button>
@@ -366,18 +363,16 @@ export const AdminModal = ({ isOpen, onClose }: AdminModalProps) => {
               <div className="flex items-center gap-2 border-b border-slate-800 pb-3 flex-wrap">
                 <button
                   onClick={() => setActiveTab('pending')}
-                  className={`relative px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center gap-2 cursor-pointer ${
-                    activeTab === 'pending'
-                      ? 'bg-amber-500 text-slate-950 shadow-md shadow-amber-500/20'
-                      : 'bg-slate-800/80 text-slate-400 hover:text-white hover:bg-slate-800 border border-slate-700'
-                  }`}
+                  className={`relative px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center gap-2 cursor-pointer ${activeTab === 'pending'
+                    ? 'bg-amber-500 text-slate-950 shadow-md shadow-amber-500/20'
+                    : 'bg-slate-800/80 text-slate-400 hover:text-white hover:bg-slate-800 border border-slate-700'
+                    }`}
                 >
                   <Clock size={15} />
                   <span>Pendientes de Aprobación</span>
                   {pendingComments.length > 0 && (
-                    <span className={`text-[10px] px-2 py-0.5 rounded-full font-black ${
-                      activeTab === 'pending' ? 'bg-slate-950 text-amber-300' : 'bg-amber-500 text-slate-950'
-                    }`}>
+                    <span className={`text-[10px] px-2 py-0.5 rounded-full font-black ${activeTab === 'pending' ? 'bg-slate-950 text-amber-300' : 'bg-amber-500 text-slate-950'
+                      }`}>
                       {pendingComments.length}
                     </span>
                   )}
@@ -385,11 +380,10 @@ export const AdminModal = ({ isOpen, onClose }: AdminModalProps) => {
 
                 <button
                   onClick={() => setActiveTab('published')}
-                  className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center gap-2 cursor-pointer ${
-                    activeTab === 'published'
-                      ? 'bg-amber-500 text-slate-950 shadow-md shadow-amber-500/20'
-                      : 'bg-slate-800/80 text-slate-400 hover:text-white hover:bg-slate-800 border border-slate-700'
-                  }`}
+                  className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center gap-2 cursor-pointer ${activeTab === 'published'
+                    ? 'bg-amber-500 text-slate-950 shadow-md shadow-amber-500/20'
+                    : 'bg-slate-800/80 text-slate-400 hover:text-white hover:bg-slate-800 border border-slate-700'
+                    }`}
                 >
                   <MessageSquare size={15} />
                   <span>Publicados ({publishedComments.length})</span>
@@ -397,11 +391,10 @@ export const AdminModal = ({ isOpen, onClose }: AdminModalProps) => {
 
                 <button
                   onClick={() => setActiveTab('projects')}
-                  className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center gap-2 cursor-pointer ${
-                    activeTab === 'projects'
-                      ? 'bg-amber-500 text-slate-950 shadow-md shadow-amber-500/20'
-                      : 'bg-slate-800/80 text-slate-400 hover:text-white hover:bg-slate-800 border border-slate-700'
-                  }`}
+                  className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center gap-2 cursor-pointer ${activeTab === 'projects'
+                    ? 'bg-amber-500 text-slate-950 shadow-md shadow-amber-500/20'
+                    : 'bg-slate-800/80 text-slate-400 hover:text-white hover:bg-slate-800 border border-slate-700'
+                    }`}
                 >
                   <FolderGit2 size={15} />
                   <span>Portafolio / Proyectos ({projects.length})</span>
@@ -442,7 +435,7 @@ export const AdminModal = ({ isOpen, onClose }: AdminModalProps) => {
                       >
                         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                           <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-amber-500 to-amber-700 text-slate-950 font-black text-xs flex items-center justify-center font-['Cinzel'] shrink-0 border border-white/40">
+                            <div className="w-10 h-10 rounded-full bg-linear-to-br from-amber-500 to-amber-700 text-slate-950 font-black text-xs flex items-center justify-center font-['Cinzel'] shrink-0 border border-white/40">
                               {(item.authorName.charAt(0) || 'L') + (item.authorLastNameInitial?.charAt(0) || '')}
                             </div>
                             <div>
@@ -516,7 +509,7 @@ export const AdminModal = ({ isOpen, onClose }: AdminModalProps) => {
                     >
                       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                         <div className="flex items-center gap-3">
-                          <div className="w-9 h-9 rounded-full bg-gradient-to-br from-slate-700 to-slate-800 text-amber-400 font-bold text-xs flex items-center justify-center shrink-0 border border-slate-700">
+                          <div className="w-9 h-9 rounded-full bg-linear-to-br from-slate-700 to-slate-800 text-amber-400 font-bold text-xs flex items-center justify-center shrink-0 border border-slate-700">
                             {(item.authorName.charAt(0) || 'L') + (item.authorLastNameInitial?.charAt(0) || '')}
                           </div>
                           <div>
@@ -765,7 +758,7 @@ export const AdminModal = ({ isOpen, onClose }: AdminModalProps) => {
                     type="text"
                     value={editingProject.title}
                     onChange={e => setEditingProject({ ...editingProject, title: e.target.value })}
-                    className="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-amber-400"
+                    className="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-white focus:outline-none"
                   />
                 </div>
                 <div>
@@ -774,7 +767,7 @@ export const AdminModal = ({ isOpen, onClose }: AdminModalProps) => {
                     type="text"
                     value={editingProject.tagline || ''}
                     onChange={e => setEditingProject({ ...editingProject, tagline: e.target.value })}
-                    className="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-amber-400"
+                    className="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-white focus:outline-none"
                   />
                 </div>
               </div>
@@ -785,7 +778,7 @@ export const AdminModal = ({ isOpen, onClose }: AdminModalProps) => {
                   rows={3}
                   value={editingProject.description}
                   onChange={e => setEditingProject({ ...editingProject, description: e.target.value })}
-                  className="w-full bg-slate-800 border border-slate-700 rounded-xl p-3 text-white resize-none focus:outline-none focus:border-amber-400"
+                  className="w-full bg-slate-800 border border-slate-700 rounded-xl p-3 text-white resize-none focus:outline-none"
                 />
               </div>
 
@@ -797,7 +790,7 @@ export const AdminModal = ({ isOpen, onClose }: AdminModalProps) => {
                     value={editingProject.imageUrl || ''}
                     onChange={e => setEditingProject({ ...editingProject, imageUrl: e.target.value })}
                     placeholder="/assets/inmo.png o URL externa"
-                    className="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-amber-400"
+                    className="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-white focus:outline-none"
                   />
                 </div>
                 <div>
@@ -807,7 +800,7 @@ export const AdminModal = ({ isOpen, onClose }: AdminModalProps) => {
                     value={editingProject.projectUrl || ''}
                     onChange={e => setEditingProject({ ...editingProject, projectUrl: e.target.value })}
                     placeholder="https://... o #contacto"
-                    className="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-amber-400"
+                    className="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-white focus:outline-none"
                   />
                 </div>
               </div>
@@ -820,7 +813,7 @@ export const AdminModal = ({ isOpen, onClose }: AdminModalProps) => {
                     value={editingProject.statusText || ''}
                     onChange={e => setEditingProject({ ...editingProject, statusText: e.target.value })}
                     placeholder="Ej. En Producción / Arquitectura LPB"
-                    className="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-amber-400"
+                    className="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-white focus:outline-none"
                   />
                 </div>
                 <div className="flex items-center gap-3 pt-5">
@@ -845,7 +838,7 @@ export const AdminModal = ({ isOpen, onClose }: AdminModalProps) => {
                   value={tagsInput}
                   onChange={e => setTagsInput(e.target.value)}
                   placeholder="React, TypeScript, Supabase, Tailwind"
-                  className="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-amber-400"
+                  className="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-white focus:outline-none"
                 />
               </div>
             </div>

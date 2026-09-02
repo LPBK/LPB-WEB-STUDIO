@@ -51,7 +51,7 @@ export const CommentModal = ({
       {/* Modal Card */}
       <div className="relative w-full max-w-2xl bg-white/95 backdrop-blur-2xl rounded-3xl border border-amber-200/80 shadow-[0_25px_60px_-15px_rgba(15,23,42,0.25)] overflow-hidden z-10 my-8">
         {/* Decorative Top Accent */}
-        <div className="h-2 bg-gradient-to-r from-amber-500 via-amber-300 to-amber-600" />
+        <div className="h-2 bg-linear-to-r from-amber-500 via-amber-300 to-amber-600" />
 
         {/* Modal Header */}
         <div className="px-6 sm:px-8 pt-6 pb-4 flex items-center justify-between border-b border-slate-100">
@@ -97,7 +97,7 @@ export const CommentModal = ({
               Vista Previa de cómo se verá tu reseña:
             </div>
 
-            <div className="glass-panel p-5 sm:p-6 border border-amber-200/60 bg-gradient-to-br from-white/95 to-amber-50/30 rounded-2xl shadow-sm">
+            <div className="glass-panel p-5 sm:p-6 border border-amber-200/60 bg-linear-to-br from-white/95 to-amber-50/30 rounded-2xl shadow-sm">
               {/* Card Top: Avatar, Names, Rating */}
               <div className="flex items-start justify-between gap-3 mb-3">
                 <div className="flex items-center gap-3">
@@ -108,7 +108,7 @@ export const CommentModal = ({
                       className="w-12 h-12 rounded-full object-cover border-2 border-amber-400 shadow-sm"
                     />
                   ) : (
-                    <div className="w-12 h-12 rounded-full bg-gradient-to-br from-amber-400 via-amber-500 to-amber-600 text-slate-950 font-black text-sm flex items-center justify-center border-2 border-white shadow-sm font-['Cinzel']">
+                    <div className="w-12 h-12 rounded-full bg-linear-to-br from-amber-400 via-amber-500 to-amber-600 text-slate-950 font-black text-sm flex items-center justify-center border-2 border-white shadow-sm font-['Cinzel']">
                       {initials}
                     </div>
                   )}
@@ -179,7 +179,7 @@ export const CommentModal = ({
             type="button"
             disabled={isSending}
             onClick={handleConfirmAndSaveToDB}
-            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 via-amber-600 to-amber-700 hover:from-amber-600 hover:to-amber-800 text-white font-bold text-sm shadow-md shadow-amber-600/20 transition-all transform hover:-translate-y-0.5 cursor-pointer"
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-xl bg-linear-to-r from-amber-500 via-amber-600 to-amber-700 hover:from-amber-600 hover:to-amber-800 text-white font-bold text-sm shadow-md shadow-amber-600/20 transition-all transform hover:-translate-y-0.5 cursor-pointer"
           >
             <Send size={16} />
             {isSending ? 'Guardando en BD...' : 'Confirmar y Registrar'}

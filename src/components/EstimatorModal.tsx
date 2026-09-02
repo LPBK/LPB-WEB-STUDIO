@@ -99,7 +99,7 @@ export const EstimatorModal = ({ isOpen, onClose, initialServiceId }: EstimatorM
 
     const includedModulesSection = isAdvancedPackage
       ? `💼 *Módulos Ya Incluidos de Fábrica (Sin costo extra):*\n` +
-        INCLUDED_IN_ADVANCED_MODULES.map(id => `  • ✅ ${ADDON_MODULES.find(a => a.id === id)?.name} (Incluido)\n`).join('')
+      INCLUDED_IN_ADVANCED_MODULES.map(id => `  • ✅ ${ADDON_MODULES.find(a => a.id === id)?.name} (Incluido)\n`).join('')
       : '';
 
     const optionalAddonsText = selectedAddons
@@ -217,23 +217,21 @@ export const EstimatorModal = ({ isOpen, onClose, initialServiceId }: EstimatorM
                 <div
                   key={addon.id}
                   onClick={() => toggleAddon(addon.id)}
-                  className={`flex flex-col sm:flex-row sm:items-center justify-between p-3.5 sm:p-4 rounded-xl transition-all duration-200 gap-2 sm:gap-4 ${
-                    isIncludedInPackage
+                  className={`flex flex-col sm:flex-row sm:items-center justify-between p-3.5 sm:p-4 rounded-xl transition-all duration-200 gap-2 sm:gap-4 ${isIncludedInPackage
                       ? 'bg-emerald-50/50 border-2 border-emerald-400/80 shadow-xs cursor-default'
                       : isChecked
-                      ? 'bg-amber-500/10 border-2 border-amber-500/50 shadow-sm cursor-pointer'
-                      : 'bg-slate-50 border border-slate-200/80 hover:bg-slate-100/70 cursor-pointer'
-                  }`}
+                        ? 'bg-amber-500/10 border-2 border-amber-500/50 shadow-sm cursor-pointer'
+                        : 'bg-slate-50 border border-slate-200/80 hover:bg-slate-100/70 cursor-pointer'
+                    }`}
                 >
                   <div className="flex items-start gap-3 flex-1 min-w-0">
                     <div
-                      className={`w-5 h-5 rounded-md flex items-center justify-center shrink-0 mt-0.5 ${
-                        isIncludedInPackage
+                      className={`w-5 h-5 rounded-md flex items-center justify-center shrink-0 mt-0.5 ${isIncludedInPackage
                           ? 'bg-emerald-600 text-white'
                           : isChecked
-                          ? 'bg-amber-600 text-white'
-                          : 'border-2 border-slate-400 bg-white'
-                      }`}
+                            ? 'bg-amber-600 text-white'
+                            : 'border-2 border-slate-400 bg-white'
+                        }`}
                     >
                       {isChecked && <Check size={14} strokeWidth={3} />}
                     </div>
@@ -249,11 +247,10 @@ export const EstimatorModal = ({ isOpen, onClose, initialServiceId }: EstimatorM
                           )}
                         </div>
                         {/* Mobile Price Badge */}
-                        <span className={`sm:hidden font-bold text-xs px-2 py-0.5 rounded-md shrink-0 ${
-                          isIncludedInPackage
+                        <span className={`sm:hidden font-bold text-xs px-2 py-0.5 rounded-md shrink-0 ${isIncludedInPackage
                             ? 'text-emerald-800 bg-emerald-100'
                             : 'text-amber-700 bg-amber-100'
-                        }`}>
+                          }`}>
                           {isIncludedInPackage ? 'Incluido' : `+$${addon.price} RD`}
                         </span>
                       </div>
@@ -332,7 +329,7 @@ export const EstimatorModal = ({ isOpen, onClose, initialServiceId }: EstimatorM
             placeholder="Ej: Grupo Empresarial Santiago / Ing. Manuel"
             value={clientName}
             onChange={(e) => setClientName(e.target.value)}
-            className="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-2.5 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-amber-500/40 focus:border-amber-500 transition-all placeholder:text-slate-400"
+            className="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-2.5 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-amber-500/40 transition-all"
           />
         </div>
 

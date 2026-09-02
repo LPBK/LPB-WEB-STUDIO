@@ -70,7 +70,7 @@ export const Footer = ({ onOpenAdmin }: FooterProps) => {
                 className="flex items-center gap-2 hover:text-amber-400 transition-colors"
               >
                 <Mail size={14} className="text-amber-400" />
-                <span>contacto@lpbwebstudio.dev</span>
+                <span>lpbwebstudio@gmail.com</span>
               </a>
               <a
                 href="https://www.lpbwebstudio.dev/"

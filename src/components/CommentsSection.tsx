@@ -283,7 +283,7 @@ export const CommentsSection = () => {
                             )}
                             <div className="min-w-0 flex-1">
                               <div className="flex items-center gap-1.5 flex-wrap">
-                                <h4 className="font-extrabold text-slate-900 text-sm sm:text-base leading-snug break-words">
+                                <h4 className="font-extrabold text-slate-900 text-sm sm:text-base leading-snug wrap-break-word">
                                   {authorFull}
                                 </h4>
                                 {item.verified && (
@@ -319,13 +319,13 @@ export const CommentsSection = () => {
                         <div className="inline-flex items-center gap-1.5 bg-linear-to-r from-amber-50/90 to-slate-50 border border-amber-200/80 px-3 py-1.5 rounded-xl text-xs text-slate-800 font-medium mb-3.5 flex-wrap max-w-full">
                           <FolderGit2 size={13} className="text-amber-700 shrink-0" />
                           <span className="text-amber-900 font-bold">Proyecto:</span>
-                          <span className="font-bold text-slate-900 break-words">{item.projectName}</span>
+                          <span className="font-bold text-slate-900 wrap-break-word">{item.projectName}</span>
                           <span className="text-amber-400">•</span>
-                          <span className="text-slate-600 font-semibold text-[11px] break-words">{item.projectType}</span>
+                          <span className="text-slate-600 font-semibold text-[11px] wrap-break-word">{item.projectType}</span>
                         </div>
 
                         {/* Comment Message */}
-                        <p className="text-slate-700 text-sm leading-relaxed mb-4 bg-slate-50/60 p-3.5 rounded-xl border border-slate-100 break-words">
+                        <p className="text-slate-700 text-sm leading-relaxed mb-4 bg-slate-50/60 p-3.5 rounded-xl border border-slate-100 wrap-break-word">
                           "{item.comment}"
                         </p>
 
